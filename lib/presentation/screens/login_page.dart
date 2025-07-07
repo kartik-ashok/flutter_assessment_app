@@ -33,14 +33,14 @@ class LoginScreen extends StatelessWidget {
   }
 
   Widget _buildLogo() {
-    return Row(
+    return const Row(
       mainAxisSize: MainAxisSize.min,
       children: [],
     );
   }
 
   Widget _buildEmailInput() {
-    return TextField(
+    return TextFormField(
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
         hintText: 'Enter your email',
@@ -142,6 +142,11 @@ class LoginScreen extends StatelessWidget {
                       'assets/images/allycare.png', // Replace with your logo asset
                       width: 202,
                       height: 66,
+                    ),
+                    const SizedBox(height: 32),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 32),
+                      child: _buildEmailInput(),
                     ),
                     const SizedBox(height: 32),
                     Padding(

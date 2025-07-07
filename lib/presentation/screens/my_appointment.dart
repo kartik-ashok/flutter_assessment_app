@@ -5,10 +5,10 @@ class MyAppointment extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hello Jane'),
+        title: const Text('Hello Jane'),
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications),
+            icon: const Icon(Icons.notifications),
             onPressed: () {},
           ),
         ],
@@ -19,7 +19,7 @@ class MyAppointment extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // My Assessments and My Appointments
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('My Assessments', style: TextStyle(fontSize: 18)),
@@ -32,10 +32,10 @@ class MyAppointment extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Appointment Cards
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 AppointmentCard(
@@ -46,27 +46,27 @@ class MyAppointment extends StatelessWidget {
                     label: 'Fitness Appointment', color: Colors.orange),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // View All Button
             Align(
               alignment: Alignment.center,
               child: TextButton(
                 onPressed: () {},
-                child: Text('View all'),
+                child: const Text('View all'),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Challenges Section
-            Text('Challenges', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 8),
+            const Text('Challenges', style: TextStyle(fontSize: 18)),
+            const SizedBox(height: 8),
             ChallengeCard(),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
 
             // Workout Routines Section
-            Text('Workout Routines', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 8),
+            const Text('Workout Routines', style: TextStyle(fontSize: 18)),
+            const SizedBox(height: 8),
             WorkoutRoutineCard(),
           ],
         ),
@@ -98,7 +98,7 @@ class AppointmentCard extends StatelessWidget {
         child: Text(
           label,
           textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
       ),
     );
@@ -109,7 +109,7 @@ class ChallengeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.green[100],
         borderRadius: BorderRadius.circular(12),
@@ -117,17 +117,17 @@ class ChallengeCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Today's Challenge!", style: TextStyle(fontSize: 16)),
-          SizedBox(height: 10),
-          Text('Push Up 20x', style: TextStyle(fontSize: 18)),
-          SizedBox(height: 10),
-          LinearProgressIndicator(value: 0.5), // 10/20 Complete
-          SizedBox(height: 8),
-          Text('10/20 Complete', style: TextStyle(fontSize: 16)),
-          SizedBox(height: 8),
+          const Text("Today's Challenge!", style: TextStyle(fontSize: 16)),
+          const SizedBox(height: 10),
+          const Text('Push Up 20x', style: TextStyle(fontSize: 18)),
+          const SizedBox(height: 10),
+          const LinearProgressIndicator(value: 0.5), // 10/20 Complete
+          const SizedBox(height: 8),
+          const Text('10/20 Complete', style: TextStyle(fontSize: 16)),
+          const SizedBox(height: 8),
           ElevatedButton(
             onPressed: () {},
-            child: Text('Continue'),
+            child: const Text('Continue'),
           ),
         ],
       ),
@@ -139,12 +139,12 @@ class WorkoutRoutineCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.blue[100],
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Sweat Starter', style: TextStyle(fontSize: 18)),
