@@ -421,85 +421,93 @@ class _MyAssessmentState extends State<MyAssessment> {
     return Scaffold(
       body: Column(
         children: [
-          Container(
-            color: Colors.grey,
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Assessment cards
-                Column(
+          Column(
+            children: [
+              Container(
+                color: Colors.grey,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (provider.isLoading) ...[
-                      const Center(child: CircularProgressIndicator()),
-                    ] else if (provider.cards.isEmpty) ...[
-                      Center(
-                          child: InkWell(
-                              onTap: () {
-                                print('Add Cards');
-                                addAssessmentCardstofirestore
-                                    .addAssessmentCardsToFirestore();
+                    // Assessment cards
+                    Expanded(
+                      child: Column(
+                        children: [
+                          if (provider.isLoading) ...[
+                            const Center(child: CircularProgressIndicator()),
+                          ] else if (provider.cards.isEmpty) ...[
+                            Center(
+                                child: InkWell(
+                                    onTap: () {
+                                      print('Add Cards');
+                                      addAssessmentCardstofirestore
+                                          .addAssessmentCardsToFirestore();
+                                    },
+                                    child: Text('No assessments found'))),
+                          ] else ...[
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: provider.cards.length,
+                              itemBuilder: (context, index) {
+                                final card = provider.cards[index];
+                                return assessmentCard(
+                                  imageUrl: card.imageUrl,
+                                  title: card.title,
+                                  description: card.description,
+                                );
                               },
-                              child: Text('No assessments found'))),
-                    ] else ...[
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: provider.cards.length,
-                        itemBuilder: (context, index) {
-                          final card = provider.cards[index];
-                          return assessmentCard(
-                            imageUrl: card.imageUrl,
-                            title: card.title,
-                            description: card.description,
-                          );
-                        },
+                            ),
+                          ],
+                        ],
                       ),
-                    ],
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Implement View all functionality
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xff2a70f4),
+                          minimumSize: const Size(90, 28),
+                          padding: EdgeInsets.zero,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        child: const Text(
+                          'View all',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-                Align(
-                  alignment: Alignment.center,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Implement View all functionality
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xff2a70f4),
-                      minimumSize: const Size(90, 28),
-                      padding: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    child: const Text(
-                      'View all',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
+              ),
+              // Challenges Section
+              sectionHeader(
+                title: 'Challenges',
+                onViewAll: () {
+                  // Implement Challenges View All
+                },
+              ),
+              challengeCard(),
+              const SizedBox(height: 24),
+              sectionHeader(
+                title: 'Workout Routines',
+                onViewAll: () {
+                  // Implement Workout Routines View All
+                },
+              ),
 
-                // Challenges Section
-                sectionHeader(
-                  title: 'Challenges',
-                  onViewAll: () {
-                    // Implement Challenges View All
-                  },
-                ),
-                challengeCard(),
-                const SizedBox(height: 24),
-                sectionHeader(
-                  title: 'Workout Routines',
-                  onViewAll: () {
-                    // Implement Workout Routines View All
-                  },
-                ),
-
-                ListView.builder(
+              SizedBox(
+                height: 300,
+                child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: 10,
                     itemBuilder: (context, index) {
@@ -513,10 +521,8 @@ class _MyAssessmentState extends State<MyAssessment> {
                         difficulty: 'Medium',
                       );
                     }),
-
-                const SizedBox(height: 20),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

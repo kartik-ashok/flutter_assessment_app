@@ -6,14 +6,14 @@ import 'package:flutter_assessment_app/presentation/screens/my_assessment.dart';
 import 'package:flutter_assessment_app/provider/assessmen_card_provider.dart';
 import 'package:provider/provider.dart';
 
-class MyAssessments extends StatefulWidget {
-  const MyAssessments({super.key});
+class MyDashboard extends StatefulWidget {
+  const MyDashboard({super.key});
 
   @override
-  State<MyAssessments> createState() => _MyAssessmentsState();
+  State<MyDashboard> createState() => _MyAssessmentsState();
 }
 
-class _MyAssessmentsState extends State<MyAssessments>
+class _MyAssessmentsState extends State<MyDashboard>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   AddAssessmentCardstofirestore addAssessmentCardstofirestore =
