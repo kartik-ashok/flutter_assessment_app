@@ -2,56 +2,107 @@ import 'package:flutter/material.dart';
 import 'package:flutter_assessment_app/assets/app_colors.dart';
 import 'package:flutter_assessment_app/assets/apptext_styles.dart';
 import 'package:flutter_assessment_app/assets/image_paths.dart';
+import 'package:flutter_assessment_app/provider/provider.dart';
+import 'package:provider/provider.dart';
 
-class MyAppointment extends StatelessWidget {
+class MyAppointment extends StatefulWidget {
+  @override
+  State<MyAppointment> createState() => _MyAppointmentState();
+}
+
+class _MyAppointmentState extends State<MyAppointment> {
+  bool showAll = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<AssessmentCardProvider>(context, listen: false)
+        .fetchAppointmentCards();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<AssessmentCardProvider>(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 16),
+          // const SizedBox(height: 16),
 
           // Appointments Grid
-          const Text(
-            'My Appointments',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: Colors.black87,
+          // const Text(
+          //   'My Appointments',
+          //   style: TextStyle(
+          //     fontSize: 18,
+          //     fontWeight: FontWeight.w700,
+          //     color: Colors.black87,
+          //   ),
+          // ),
+          // const SizedBox(height: 16),
+          if (provider.isLoading) ...[
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: AppColors.primaryBlue,
+                ),
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10.0,
-              mainAxisSpacing: 10.0,
-              childAspectRatio: 3 / 2,
+          ] else if (provider.cards.isEmpty) ...[
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    const Text(
+                      'No assessments found',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: const Text('Add Sample Cards'),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            itemCount: 6, // Reduced count for better layout
-            itemBuilder: (context, index) {
-              final appointments = [
-                {'label': 'Cancer 2nd Opinion', 'color': Colors.red},
-                {'label': 'Cardiology Checkup', 'color': Colors.blue},
-                {'label': 'Dermatology Visit', 'color': Colors.green},
-                {'label': 'Orthopedic Consult', 'color': Colors.orange},
-                {'label': 'General Checkup', 'color': Colors.purple},
-                {'label': 'Eye Examination', 'color': Colors.teal},
-              ];
+          ] else ...[
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10.0,
+                mainAxisSpacing: 10.0,
+                childAspectRatio: 3 / 2,
+              ),
+              itemCount: showAll
+                  ? provider.appointmentCard.length
+                  : 3, // Reduced count for better layout
+              itemBuilder: (context, index) {
+                final appointments = [
+                  {'logo': ImagePaths.cancer, 'color': Color(0xffC6D9FF)},
+                  {'logo': ImagePaths.therapy, 'color': Color(0xffE9C6FF)},
+                  {'logo': ImagePaths.dambles, 'color': Color(0xffFFD4C6)},
+                ];
 
-              final appointment = appointments[index % appointments.length];
-              return AppointmentCard(
-                label: appointment['label'] as String,
-                color: appointment['color'] as Color,
-              );
-            },
-          ),
-
+                final appointment = appointments[index % appointments.length];
+                return AppointmentCard(
+                  logo: appointment['logo'] as String,
+                  color: appointment['color'] as Color,
+                  label: provider.appointmentCard[index].name +
+                      provider.appointmentCard[index].type,
+                );
+              },
+            ),
+          ],
           const SizedBox(height: 16),
 
           // View All Button
@@ -59,6 +110,10 @@ class MyAppointment extends StatelessWidget {
             alignment: Alignment.center,
             child: ElevatedButton(
               onPressed: () {
+                setState(() {
+                  showAll = !showAll;
+                });
+                // Implement View all functionality
                 // Implement view all appointments
               },
               style: ElevatedButton.styleFrom(
@@ -135,34 +190,106 @@ class MyAppointment extends StatelessWidget {
 }
 
 class AppointmentCard extends StatelessWidget {
-  final String label;
+  final String logo;
   final Color color;
+  final String label;
 
   const AppointmentCard({
     super.key,
-    required this.label,
+    required this.logo,
     required this.color,
+    required this.label,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 100,
-      height: 100,
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Center(
-        child: Text(
-          label,
-          textAlign: TextAlign.center,
-          style: const TextStyle(color: Colors.white),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: Container(
+                padding: const EdgeInsets.all(5),
+                color: AppColors.white,
+                child: Image.asset(
+                  logo,
+                  fit: BoxFit.contain,
+                ),
+                height: 40,
+                width: 40,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Flexible(
+              child: Text(
+                label,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.size24w600Blue.copyWith(fontSize: 14),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
+
+// class AppointmentCard extends StatelessWidget {
+//   final String logo;
+//   final Color color;
+//   final String label;
+
+//   const AppointmentCard({
+//     super.key,
+//     required this.logo,
+//     required this.color,
+//     required this.label,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       decoration: BoxDecoration(
+//         color: color,
+//         borderRadius: BorderRadius.circular(12),
+//       ),
+//       child: Padding(
+//         padding: const EdgeInsets.all(8.0),
+//         child: Column(
+//           children: [
+//             ClipRRect(
+//               borderRadius: BorderRadius.circular(30),
+//               child: Container(
+//                 padding: const EdgeInsets.all(5),
+//                 color: AppColors.white,
+//                 child: Image.asset(
+//                   logo,
+//                   fit: BoxFit.fill,
+//                 ),
+//                 height: 50,
+//                 width: 50,
+//               ),
+//             ),
+//             Center(
+//               child: Text(label,
+//                   textAlign: TextAlign.center,
+//                   style: AppTextStyles.size24w600Blue.copyWith(fontSize: 14)),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 // Challenge card widget
 Widget challengeCard() {

@@ -3,7 +3,7 @@ import 'package:flutter_assessment_app/common/greeting_header.dart';
 import 'package:flutter_assessment_app/domain/repository/assessment_cardstofirestore.dart';
 import 'package:flutter_assessment_app/presentation/screens/my_appointment.dart';
 import 'package:flutter_assessment_app/presentation/screens/my_assessment.dart';
-import 'package:flutter_assessment_app/provider/assessmen_card_provider.dart';
+import 'package:flutter_assessment_app/provider/provider.dart';
 import 'package:provider/provider.dart';
 
 class MyDashboard extends StatefulWidget {

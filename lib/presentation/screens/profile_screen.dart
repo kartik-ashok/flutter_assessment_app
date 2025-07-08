@@ -4,6 +4,7 @@ import 'package:flutter_assessment_app/assets/app_colors.dart';
 import 'package:flutter_assessment_app/assets/apptext_styles.dart';
 import 'package:flutter_assessment_app/domain/repository/auth_service.dart';
 import 'package:flutter_assessment_app/localStorage/app_prefrence.dart';
+import 'package:flutter_assessment_app/presentation/screens/add_data_buttons.dart';
 import 'package:flutter_assessment_app/presentation/screens/login_page.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -92,6 +93,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.primaryBlue,
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(
+            builder: (context) {
+              return AddDataButtons();
+            },
+          ));
+        },
+        child: const Icon(
+          Icons.add,
+          color: AppColors.white,
+        ),
+      ),
       appBar: AppBar(
         title: const Text('Profile'),
         centerTitle: true,

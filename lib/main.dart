@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_assessment_app/presentation/screens/login_page.dart';
-import 'package:flutter_assessment_app/presentation/screens/my_dashboard.dart';
 import 'package:flutter_assessment_app/presentation/screens/splash_screen.dart';
-import 'package:flutter_assessment_app/provider/assessmen_card_provider.dart';
+import 'package:flutter_assessment_app/provider/provider.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 

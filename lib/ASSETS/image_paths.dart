@@ -8,4 +8,7 @@ class ImagePaths {
   static const String waterWaveTwo = '${imageBasePath}waterWaveTwo.png';
   static const String sitRelax = '${imageBasePath}sit_relax.png';
   static const String halfSquats = '${imageBasePath}half_squats.png';
+  static const String dambles = '${imageBasePath}dambles.png';
+  static const String cancer = '${imageBasePath}cancer.png';
+  static const String therapy = '${imageBasePath}therophy.png';
 }

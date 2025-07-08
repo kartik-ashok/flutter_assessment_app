@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AppointmentService {
-  Future<void> addAssessmentCardsToFirestore() async {
+  Future<void> addAppointmentCardsToFirestore() async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     final List<Map<String, String>> healthServices = [

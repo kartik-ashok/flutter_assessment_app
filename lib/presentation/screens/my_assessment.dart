@@ -4,7 +4,7 @@ import 'package:flutter_assessment_app/assets/app_colors.dart';
 import 'package:flutter_assessment_app/assets/image_paths.dart';
 import 'package:flutter_assessment_app/domain/repository/assessment_cardstofirestore.dart';
 import 'package:flutter_assessment_app/presentation/screens/health_risk_assessment.dart';
-import 'package:flutter_assessment_app/provider/assessmen_card_provider.dart';
+import 'package:flutter_assessment_app/provider/provider.dart';
 import 'package:provider/provider.dart';
 
 class MyAssessment extends StatefulWidget {
@@ -16,6 +16,7 @@ class MyAssessment extends StatefulWidget {
 
 class _MyAssessmentState extends State<MyAssessment> {
   final double cardRadius = 12.0;
+  bool showAll = false;
 
   AddAssessmentCardstofirestore addAssessmentCardstofirestore =
       AddAssessmentCardstofirestore();
@@ -428,7 +429,7 @@ class _MyAssessmentState extends State<MyAssessment> {
 
     return Scaffold(
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -442,20 +443,14 @@ class _MyAssessmentState extends State<MyAssessment> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'My Assessments',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
                   if (provider.isLoading) ...[
                     const Center(
                       child: Padding(
                         padding: EdgeInsets.all(20),
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.primaryBlue,
+                        ),
                       ),
                     ),
                   ] else if (provider.cards.isEmpty) ...[
@@ -473,11 +468,7 @@ class _MyAssessmentState extends State<MyAssessment> {
                             ),
                             const SizedBox(height: 12),
                             ElevatedButton(
-                              onPressed: () {
-                                print('Add Cards');
-                                addAssessmentCardstofirestore
-                                    .addAssessmentCardsToFirestore();
-                              },
+                              onPressed: () {},
                               child: const Text('Add Sample Cards'),
                             ),
                           ],
@@ -488,7 +479,7 @@ class _MyAssessmentState extends State<MyAssessment> {
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: provider.cards.length,
+                      itemCount: showAll ? provider.cards.length : 1,
                       itemBuilder: (context, index) {
                         final card = provider.cards[index];
                         return assessmentCard(
@@ -504,6 +495,9 @@ class _MyAssessmentState extends State<MyAssessment> {
                       alignment: Alignment.center,
                       child: ElevatedButton(
                         onPressed: () {
+                          setState(() {
+                            showAll = !showAll;
+                          });
                           // Implement View all functionality
                         },
                         style: ElevatedButton.styleFrom(
