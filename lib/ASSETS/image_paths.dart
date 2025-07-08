@@ -11,4 +11,11 @@ class ImagePaths {
   static const String dambles = '${imageBasePath}dambles.png';
   static const String cancer = '${imageBasePath}cancer.png';
   static const String therapy = '${imageBasePath}therophy.png';
+  static const String posture = '${imageBasePath}posture.png';
+  static const String heart = '${imageBasePath}heart.png';
+  static const String report = '${imageBasePath}reports.png';
+  static const String body = '${imageBasePath}body.png';
+  static const String exercise = '${imageBasePath}exercise.png';
+  static const String ring = '${imageBasePath}ring.png';
+  static const String ic_security = '${imageBasePath}ic_security.png';
 }

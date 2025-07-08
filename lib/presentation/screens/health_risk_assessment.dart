@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assessment_app/ASSETS/app_colors.dart';
+import 'package:flutter_assessment_app/assets/apptext_styles.dart';
+import 'package:flutter_assessment_app/assets/image_paths.dart';
 
 class HealthRiskAssessment extends StatelessWidget {
-  const HealthRiskAssessment({Key? key}) : super(key: key);
+  final String imageUrl;
+  final String title;
+  final String description;
+
+  const HealthRiskAssessment({
+    Key? key,
+    required this.imageUrl,
+    required this.title,
+    required this.description,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     const topHeight = 320.0;
 
     return Scaffold(
-      backgroundColor: Colors.green,
+      backgroundColor: AppColors.lightGreen,
       body: SafeArea(
         child: Column(
           children: [
@@ -16,72 +28,68 @@ class HealthRiskAssessment extends StatelessWidget {
             Container(
               height: topHeight,
               width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              color: Colors.green, // Changed to white
-              child: Column(
+              padding: EdgeInsets.all(16),
+              color: AppColors.lightGreen,
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back,
-                          color:
-                              Colors.black), // Changed to black for visibility
-                      onPressed: () => Navigator.of(context).maybePop(),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  const Text(
-                    'Health Risk\nAssessment',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black, // Changed to black for visibility
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      const Icon(Icons.access_time,
-                          size: 16,
-                          color: Colors
-                              .black54), // Changed to black for visibility
-                      const SizedBox(width: 4),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.redAccent, // Changed to red
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        child: const Text(
-                          '4 min',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color:
-                                Colors.white, // Changed to white for visibility
-                            fontWeight: FontWeight.w500,
+                  // Image on the left
+
+                  // Column with back button, title, and time
+                  Expanded(
+                    flex: 3, // Adjust for content size
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: IconButton(
+                            icon: const Icon(Icons.arrow_back,
+                                color: Colors.black),
+                            onPressed: () => Navigator.of(context).maybePop(),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: SizedBox(
-                      height: 100,
-                      child: Image.network(
-                        'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/ec5ccba5-39f7-4515-ba20-9d441bf1504b.png',
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          width: 100,
-                          height: 100,
-                          color: Colors.grey.shade300,
-                          child: const Center(
-                            child: Text('Image\nUnavailable',
-                                textAlign: TextAlign.center),
+                        const SizedBox(height: 6),
+                        Text(
+                          (this.title),
+                          style: AppTextStyles.size24w600Blue,
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          width: 65,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(5),
                           ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.access_time,
+                                  color: Colors.black54),
+                              const SizedBox(width: 4),
+                              Text(
+                                '4 min',
+                                style: AppTextStyles.size10w400Grey,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8), // spacing between image and text
+
+                  Expanded(
+                    flex: 3, // Adjust for image size
+                    child: Image.asset(
+                      ImagePaths.sitRelax,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        width: 100,
+                        height: 100,
+                        color: Colors.grey.shade300,
+                        child: const Center(
+                          child: Text('Image\nUnavailable',
+                              textAlign: TextAlign.center),
                         ),
                       ),
                     ),
@@ -93,7 +101,7 @@ class HealthRiskAssessment extends StatelessWidget {
             // Bottom Scrollable Section
             Expanded(
               child: Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 decoration: const BoxDecoration(
                   color: Colors.white, // Changed to red
                   borderRadius: BorderRadius.vertical(
@@ -105,93 +113,152 @@ class HealthRiskAssessment extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'What do you get ?',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF242C54),
-                        ),
-                      ),
+                      Text('What do you get ?',
+                          style: AppTextStyles.size24w600Blue
+                              .copyWith(fontSize: 15)),
                       const SizedBox(height: 12),
-                      SizedBox(
-                        height: 110,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: const [
-                            IconLabelCard(
-                              iconUrl:
-                                  'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/f41986bb-8918-44bb-86dc-9de3c4f80db9.png',
-                              label: 'Key Body Vitals',
-                            ),
-                            SizedBox(width: 12),
-                            IconLabelCard(
-                              iconUrl:
-                                  'https://placehold.co/64x64/png?text=Posture',
-                              label: 'Posture Analysis',
-                            ),
-                            SizedBox(width: 12),
-                            IconLabelCard(
-                              iconUrl:
-                                  'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/b6ec404f-5b22-43f4-8a3a-1103c06012c6.png',
-                              label: 'Body Composition',
-                            ),
-                            SizedBox(width: 12),
-                            IconLabelCard(
-                              iconUrl:
-                                  'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/9b67ca32-754b-4f9a-960d-33b6141b9e22.png',
-                              label: 'Instant Reports',
-                            ),
-                          ],
-                        ),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconLabelCard(
+                            iconUrl: ImagePaths.heart,
+                            label: 'Key Body Vitals',
+                          ),
+                          IconLabelCard(
+                            iconUrl: ImagePaths.posture,
+                            label: 'Posture Analysis',
+                          ),
+                          IconLabelCard(
+                            iconUrl: ImagePaths.body,
+                            label: 'Body Composition',
+                          ),
+                          IconLabelCard(
+                            iconUrl: ImagePaths.report,
+                            label: 'Instant Reports',
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 24),
-                      const Text(
-                        'How we do it?',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF242C54),
-                        ),
-                      ),
+                      Text('How we do it?',
+                          style: AppTextStyles.size24w600Blue
+                              .copyWith(fontSize: 15)),
                       const SizedBox(height: 16),
                       Center(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(16),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Image.network(
-                                'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/13547c17-20e2-438d-8e9e-5ac761071078.png',
-                                width: double.infinity,
-                                height: 180,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Container(
+                          child: // Parent container (main container)
+                              SizedBox(
+                            height: 180, // height of the card
+                            child: Stack(
+                              clipBehavior:
+                                  Clip.none, // Allows child to overflow
+                              // allows overflow outside bounds
+                              children: [
+                                // 1. Exercise image - background
+                                Container(
                                   width: double.infinity,
                                   height: 180,
-                                  color: Colors.grey.shade300,
-                                  child: const Center(
-                                    child: Text('Image\nUnavailable',
-                                        textAlign: TextAlign.center),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    image: DecorationImage(
+                                      image: AssetImage(ImagePaths.exercise),
+                                      fit: BoxFit.cover,
+                                      onError: (error, stackTrace) {},
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+
+                                // 2. Optional transparent overlay
+                                Container(
+                                  width: double.infinity,
+                                  height: 180,
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                ),
+
+                                // 3. Ring image that overflows outside top-right
+                                // Positioned(
+                                //   top: -50, // moves it above the container
+                                //   right: -10, // moves it outside to the right
+                                //   child: Image.asset(
+                                //     ImagePaths.ring,
+                                //     fit: BoxFit.contain,
+                                //     errorBuilder:
+                                //         (context, error, stackTrace) =>
+                                //             Container(
+                                //       width: 80,
+                                //       height: 80,
+                                //       color: Colors.grey.shade300,
+                                //       child: const Center(
+                                //           child: Text('Ring\nUnavailable')),
+                                //     ),
+                                //   ),
+                                // ),
+                              ],
+                            ),
                           ),
+                          // child: Stack(
+                          //   alignment: Alignment.topRight,
+                          //   children: [
+                          //     Image.asset(
+                          //       ImagePaths.ring,
+                          //       width: double.infinity,
+                          //       height: 180,
+                          //       fit: BoxFit.cover,
+                          //       errorBuilder: (context, error, stackTrace) =>
+                          //           Container(
+                          //         width: double.infinity,
+                          //         height: 180,
+                          //         color: Colors.grey.shade300,
+                          //         child: const Center(
+                          //           child: Text('Image\nUnavailable',
+                          //               textAlign: TextAlign.center),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     Container(
+                          //       width: double.infinity,
+                          //       height: 180,
+                          //       decoration: BoxDecoration(
+                          //         color: Colors.transparent,
+                          //         borderRadius: BorderRadius.circular(
+                          //           16,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     Image.asset(
+                          //       ImagePaths.exercise,
+                          //       width: double.infinity,
+                          //       height: 180,
+                          //       fit: BoxFit.cover,
+                          //       errorBuilder: (context, error, stackTrace) =>
+                          //           Container(
+                          //         width: double.infinity,
+                          //         height: 180,
+                          //         color: Colors.grey.shade300,
+                          //         child: const Center(
+                          //           child: Text('Image\nUnavailable',
+                          //               textAlign: TextAlign.center),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
                         ),
                       ),
                       const SizedBox(height: 24),
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFD9F0E7),
+                          color: const Color.fromARGB(255, 218, 232, 226),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Row(
+                        child: Row(
                           children: [
-                            Icon(Icons.shield_outlined,
-                                color: Color(0xFF27AE60)),
+                            Image.asset(
+                                width: 13, height: 15, ImagePaths.ic_security),
                             SizedBox(width: 10),
                             Flexible(
                               child: Text(
@@ -238,28 +305,19 @@ class IconLabelCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 100,
-      margin: const EdgeInsets.only(right: 12),
       child: Column(
         children: [
           Container(
             width: 64,
             height: 64,
+            padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: const LinearGradient(
-                colors: [Color(0xFF647DEE), Color(0xFF4E54C8)],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.blue.shade200.withOpacity(0.5),
-                  offset: const Offset(0, 4),
-                  blurRadius: 8,
-                ),
-              ],
+              color: Colors.white,
+              border: Border.all(color: Colors.grey.shade300, width: 1),
             ),
             child: ClipOval(
-              child: Image.network(
+              child: Image.asset(
                 iconUrl,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) =>
@@ -271,11 +329,8 @@ class IconLabelCard extends StatelessWidget {
           Text(
             label,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Color(0xFF242C54),
-              fontWeight: FontWeight.w600,
-            ),
+            style: AppTextStyles.size24w600Blue
+                .copyWith(fontSize: 8, color: AppColors.black),
           ),
         ],
       ),
@@ -300,11 +355,8 @@ class InstructionList extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 8),
           child: Text(
             '${index + 1}. ${instructions[index]}',
-            style: const TextStyle(
-              fontSize: 14,
-              height: 1.5,
-              color: Color(0xFF444444),
-            ),
+            style:
+                AppTextStyles.size12w400Grey.copyWith(color: AppColors.black),
           ),
         ),
       ),

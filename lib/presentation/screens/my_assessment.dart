@@ -51,92 +51,84 @@ class _MyAssessmentState extends State<MyAssessment> {
     required String description,
     // VoidCallback? onTap,
   }) {
-    return GestureDetector(
-        onTap: () {
-          Navigator.push(context, MaterialPageRoute(
-            builder: (context) {
-              return const HealthRiskAssessment();
-            },
-          ));
-        },
-        child: Container(
-          height: 131,
-          margin: const EdgeInsets.only(bottom: 14),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(cardRadius),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0xffeeeeee),
-                blurRadius: 6,
-                offset: Offset(0, 3),
-              )
-            ],
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Left Image with rounded left corners
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(cardRadius),
-                    bottomLeft: Radius.circular(cardRadius),
-                  ),
-                  gradient: index % 2 == 0
-                      ? AppColors.orangeGradientone
-                      : AppColors.greenGradientTwo,
-                ),
-                child: Image.asset(
-                  assessmentCards[index % 2],
-                  width: 99,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    width: 100,
-                    height: 116,
-                    color: Colors.grey[300],
-                    alignment: Alignment.center,
-                    child: const Icon(Icons.broken_image,
-                        color: Colors.grey, size: 40),
-                  ),
-                ),
+    return Container(
+      height: 131,
+      margin: const EdgeInsets.only(bottom: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(cardRadius),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0xffeeeeee),
+            blurRadius: 6,
+            offset: Offset(0, 3),
+          )
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Left Image with rounded left corners
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(cardRadius),
+                bottomLeft: Radius.circular(cardRadius),
               ),
-              // Text content and start play icon
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              gradient: index % 2 == 0
+                  ? AppColors.orangeGradientone
+                  : AppColors.greenGradientTwo,
+            ),
+            child: Image.asset(
+              assessmentCards[index % 2],
+              width: 99,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                width: 100,
+                height: 116,
+                color: Colors.grey[300],
+                alignment: Alignment.center,
+                child: const Icon(Icons.broken_image,
+                    color: Colors.grey, size: 40),
+              ),
+            ),
+          ),
+          // Text content and start play icon
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title,
+                      style:
+                          AppTextStyles.size24w600Blue.copyWith(fontSize: 14)),
+                  const SizedBox(height: 4),
+                  Text(description,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: AppTextStyles.size10w400Grey
+                          .copyWith(fontWeight: FontWeight.w500)),
+                  const SizedBox(height: 4),
+                  Row(
                     children: [
-                      Text(title,
-                          style: AppTextStyles.size24w600Blue
-                              .copyWith(fontSize: 14)),
-                      const SizedBox(height: 4),
-                      Text(description,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          style: AppTextStyles.size10w400Grey
-                              .copyWith(fontWeight: FontWeight.w500)),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          bluePlayIcon(),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Start',
-                            style: AppTextStyles.size14w500Blue.copyWith(
-                                fontSize: 14, color: AppColors.primaryBlue),
-                          )
-                        ],
+                      bluePlayIcon(),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Start',
+                        style: AppTextStyles.size14w500Blue.copyWith(
+                            fontSize: 14, color: AppColors.primaryBlue),
                       )
                     ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        ));
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   Widget sectionHeader(
@@ -482,11 +474,24 @@ class _MyAssessmentState extends State<MyAssessment> {
                       itemCount: showAll ? provider.cards.length : 1,
                       itemBuilder: (context, index) {
                         final card = provider.cards[index];
-                        return assessmentCard(
-                          index: index,
-                          imageUrl: card.imageUrl,
-                          title: card.title,
-                          description: card.description,
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) {
+                                return HealthRiskAssessment(
+                                  imageUrl: card.imageUrl,
+                                  title: card.title,
+                                  description: card.description,
+                                );
+                              },
+                            ));
+                          },
+                          child: assessmentCard(
+                            index: index,
+                            imageUrl: card.imageUrl,
+                            title: card.title,
+                            description: card.description,
+                          ),
                         );
                       },
                     ),
