@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assessment_app/assets/app_colors.dart';
+import 'package:flutter_assessment_app/assets/apptext_styles.dart';
+import 'package:flutter_assessment_app/assets/image_paths.dart';
 import 'package:flutter_assessment_app/domain/repository/auth_service.dart';
+import 'package:flutter_assessment_app/localStorage/app_prefrence.dart';
 import 'package:flutter_assessment_app/presentation/screens/my_dashboard.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -17,6 +20,17 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool isLogin = false;
+  final ValueNotifier<bool> _isObscure = ValueNotifier<bool>(true);
+
+  void _togglePasswordVisibility() {
+    _isObscure.value = !_isObscure.value;
+  }
+
+  @override
+  void dispose() {
+    _isObscure.dispose();
+    super.dispose();
+  }
 
   Widget _buildLanguageSelector() {
     return Container(
@@ -51,25 +65,32 @@ class _LoginScreenState extends State<LoginScreen> {
       child: TextFormField(
         controller: _emailController,
         keyboardType: TextInputType.emailAddress,
-        style: GoogleFonts.poppins(
-          fontWeight: FontWeight.w400,
-          fontSize: 14,
-          color: AppColors.secondaryGrey,
-        ),
+        style: AppTextStyles.size14w400Grey,
         decoration: InputDecoration(
           hintText: 'Enter your email',
           prefixIcon: const Icon(Icons.email_outlined),
-          contentPadding: const EdgeInsets.symmetric(vertical: 14),
+          contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: AppColors.tertiaryGrey),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide(color: Colors.blue.shade700, width: 2),
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: Colors.blue.shade700, width: 1),
           ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: Colors.grey.shade700, width: 1),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: Colors.grey.shade700, width: 1),
+          ),
+
           filled: true,
-          fillColor: Colors.grey.shade100,
+          fillColor: Colors.white,
+          errorStyle: TextStyle(height: 0.5), // make error text take less space
+          // helperText: ' ', // keep vertical space always
         ),
         validator: (value) {
           if (value == null || value.isEmpty) return 'Email is required';
@@ -80,38 +101,61 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+ 
+
   Widget _buildPasswordInput() {
     return SizedBox(
       width: 301,
       height: 52,
-      child: TextFormField(
-        controller: _passwordController,
-        obscureText: true,
-        style: GoogleFonts.poppins(
-          fontWeight: FontWeight.w400,
-          fontSize: 14,
-          color: AppColors.secondaryGrey,
-        ),
-        decoration: InputDecoration(
-          hintText: 'Enter your password',
-          prefixIcon: const Icon(Icons.lock_outline),
-          contentPadding: const EdgeInsets.symmetric(vertical: 14),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide(color: Colors.grey.shade300),
+      child: ValueListenableBuilder(
+        valueListenable: _isObscure,
+        builder: (context, isObscure, child) => TextFormField(
+        
+          controller: _passwordController,
+          obscureText: isObscure,
+          style: AppTextStyles.size14w400Grey,
+          decoration: InputDecoration(
+            hintText: 'Enter your password',
+            prefixIcon: const Icon(Icons.lock_outline),
+            suffixIcon: IconButton(
+              icon: Icon(
+                isObscure ? Icons.visibility_off : Icons.visibility,
+                color: AppColors.secondaryGrey,
+              ),
+              onPressed: _togglePasswordVisibility,
+            ),
+
+            contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: Colors.grey.shade300),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: Colors.blue.shade700, width: 1),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: Colors.grey.shade700, width: 1),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: Colors.grey.shade700, width: 1),
+            ),
+            filled: true,
+            fillColor: Colors.grey.shade100,
+            // 👇 Reserve space for error text to avoid shifting
+            errorStyle:
+                TextStyle(height: 0.5), // make error text take less space
+            // helperText: ' ', // keep vertical space always
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide(color: Colors.blue.shade700, width: 2),
-          ),
-          filled: true,
-          fillColor: Colors.grey.shade100,
+          validator: (value) {
+            if (value == null || value.isEmpty) return 'Password is required';
+            if (value.length < 6)
+              return 'Password must be at least 6 characters';
+            return null;
+          },
         ),
-        validator: (value) {
-          if (value == null || value.isEmpty) return 'Password is required';
-          if (value.length < 6) return 'Password must be at least 6 characters';
-          return null;
-        },
       ),
     );
   }
@@ -206,31 +250,28 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // return
+    // @override
+// Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true, // default is true
+      resizeToAvoidBottomInset: true, // keep as-is
       backgroundColor: Colors.white,
-
       bottomNavigationBar: SizedBox(
         width: double.infinity,
         child: Stack(
           children: [
-            // Use the main background image that defines the shape
             Image.asset(
-              'assets/images/Vector 58.png',
-              width: double.infinity,
-              fit: BoxFit.fitWidth, // maintain original aspect ratio
-              alignment: Alignment.bottomCenter,
-            ),
-
-            // Overlay second image if needed
-            Image.asset(
-              'assets/images/Vector 57.png',
+              ImagePaths.waterWaveTwo,
               width: double.infinity,
               fit: BoxFit.fitWidth,
               alignment: Alignment.bottomCenter,
             ),
-
-            // Support text aligned properly
+            Image.asset(
+              ImagePaths.waterWaveOne,
+              width: double.infinity,
+              fit: BoxFit.fitWidth,
+              alignment: Alignment.bottomCenter,
+            ),
             Positioned(
               bottom: 12,
               left: 0,
@@ -241,52 +282,84 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
 
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 48),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16),
-                    child: _buildLanguageSelector(),
-                  ),
-                ),
-                const SizedBox(height: 141),
-                Center(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset(
-                          'assets/images/allyCare.png',
-                          width: 202,
-                          height: 66,
-                        ),
-                        const SizedBox(height: 40),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 32),
-                          child: _buildEmailInput(),
-                        ),
-                        const SizedBox(height: 20),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 32),
-                          child: _buildPasswordInput(),
-                        ),
-                        const SizedBox(height: 26),
-                        _buildContinueButton(context),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+      // ←– REPLACE your old SingleChildScrollView(...) with this:
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
-          ),
-        ],
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: IntrinsicHeight(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 48),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 16),
+                          child: _buildLanguageSelector(),
+                        ),
+                      ),
+                      const SizedBox(height: 141),
+                      Center(
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Image.asset(
+                                'assets/images/allyCare.png',
+                                width: 202,
+                                height: 66,
+                              ),
+                              const SizedBox(height: 40),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 32),
+                                child: _buildEmailInput(),
+                              ),
+                              const SizedBox(height: 20),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 32),
+                                child: _buildPasswordInput(),
+                              ),
+                              const SizedBox(height: 26),
+                              _buildContinueButton(context),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isLogin = !isLogin;
+                                  });
+                                },
+                                child: Text(
+                                  isLogin
+                                      ? "Don't have an account? Sign Up"
+                                      : "Already have an account? Log In",
+                                  style: AppTextStyles.size14w500Blue,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      // This Spacer pushes content up when there's extra room
+                      const Spacer(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

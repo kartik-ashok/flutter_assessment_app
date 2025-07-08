@@ -188,8 +188,8 @@ class HealthRiskAssessment extends StatelessWidget {
                           color: const Color(0xFFD9F0E7),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Row(
-                          children: const [
+                        child: const Row(
+                          children: [
                             Icon(Icons.shield_outlined,
                                 color: Color(0xFF27AE60)),
                             SizedBox(width: 10),

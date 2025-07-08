@@ -8,6 +8,7 @@ class AppColors {
   // Greys
   static const Color primaryGrey = Color(0xFFEAEAEA); // fixed: added 0x prefix
   static const Color secondaryGrey = Color(0xff434343);
+  static const Color tertiaryGrey = Color(0xffE8E9ED);
 
   // Greens
   static const Color lightGreen = Color(0xFFA8E6CF);
@@ -15,8 +16,17 @@ class AppColors {
   static const Color emeraldGreen = Color(0xff2B7A71);
   static const Color limeGreen = Color(0xFFCDDC39);
 
-  static const LinearGradient greenGradient = LinearGradient(
+  static const LinearGradient greenGradientOne = LinearGradient(
     colors: [Color(0xff91B655), Color(0xff69F5BB)],
+  );
+  static const LinearGradient greenGradientTwo = LinearGradient(
+    colors: [Color(0xff69F5BB), Color(0xff69F5BB)],
+  );
+  static const LinearGradient orangeGradientone = LinearGradient(
+    colors: [
+      Color.fromARGB(255, 222, 150, 121),
+      Color.fromARGB(255, 248, 237, 197)
+    ],
   );
 
   // Black & White

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assessment_app/assets/app_colors.dart';
+import 'package:flutter_assessment_app/presentation/screens/profile_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class GreetingAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -26,14 +27,23 @@ class GreetingAppBar extends StatelessWidget implements PreferredSizeWidget {
                 color: AppColors.primaryBlue,
               ),
             ),
-            Container(
-                width: 23,
-                height: 23,
-                decoration: const BoxDecoration(
-                  color: Color(0xfff1f1f6),
-                  shape: BoxShape.circle,
-                ),
-                child: Image.asset('assets/icons/profile-picture.png')),
+            InkWell(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) {
+                    return const ProfileScreen();
+                  },
+                ));
+              },
+              child: Container(
+                  width: 23,
+                  height: 23,
+                  decoration: const BoxDecoration(
+                    color: Color(0xfff1f1f6),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.asset('assets/icons/profile-picture.png')),
+            ),
           ],
         ),
       ),

@@ -3,11 +3,12 @@ import 'package:flutter_assessment_app/ASSETS/apptext_styles.dart';
 import 'package:flutter_assessment_app/assets/app_colors.dart';
 import 'package:flutter_assessment_app/assets/image_paths.dart';
 import 'package:flutter_assessment_app/domain/repository/assessment_cardstofirestore.dart';
+import 'package:flutter_assessment_app/presentation/screens/health_risk_assessment.dart';
 import 'package:flutter_assessment_app/provider/assessmen_card_provider.dart';
 import 'package:provider/provider.dart';
 
 class MyAssessment extends StatefulWidget {
-  MyAssessment({super.key});
+  const MyAssessment({super.key});
 
   @override
   State<MyAssessment> createState() => _MyAssessmentState();
@@ -36,16 +37,29 @@ class _MyAssessmentState extends State<MyAssessment> {
     );
   }
 
+  List<String> assessmentCards = [
+    ImagePaths.sitRelax,
+    ImagePaths.halfSquats,
+  ];
+
   // Assessment card widget
   Widget assessmentCard({
+    required int index,
     required String imageUrl,
     required String title,
     required String description,
-    VoidCallback? onTap,
+    // VoidCallback? onTap,
   }) {
     return GestureDetector(
-        onTap: onTap,
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(
+            builder: (context) {
+              return const HealthRiskAssessment();
+            },
+          ));
+        },
         child: Container(
+          height: 131,
           margin: const EdgeInsets.only(bottom: 14),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -62,15 +76,20 @@ class _MyAssessmentState extends State<MyAssessment> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Left Image with rounded left corners
-              ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(cardRadius),
-                  bottomLeft: Radius.circular(cardRadius),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(cardRadius),
+                    bottomLeft: Radius.circular(cardRadius),
+                  ),
+                  gradient: index % 2 == 0
+                      ? AppColors.orangeGradientone
+                      : AppColors.greenGradientTwo,
                 ),
                 child: Image.asset(
-                  imageUrl,
-                  width: 100,
-                  height: 116,
+                  assessmentCards[index % 2],
+                  width: 99,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
                     width: 100,
@@ -89,35 +108,24 @@ class _MyAssessmentState extends State<MyAssessment> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 15,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        description,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 13,
-                          color: Color(0xff505050),
-                        ),
-                      ),
-                      const SizedBox(height: 14),
+                      Text(title,
+                          style: AppTextStyles.size24w600Blue
+                              .copyWith(fontSize: 14)),
+                      const SizedBox(height: 4),
+                      Text(description,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: AppTextStyles.size10w400Grey
+                              .copyWith(fontWeight: FontWeight.w500)),
+                      const SizedBox(height: 4),
                       Row(
                         children: [
                           bluePlayIcon(),
                           const SizedBox(width: 8),
-                          const Text(
+                          Text(
                             'Start',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14,
-                              color: Color(0xff2a70f4),
-                            ),
+                            style: AppTextStyles.size14w500Blue.copyWith(
+                                fontSize: 14, color: AppColors.primaryBlue),
                           )
                         ],
                       )
@@ -419,50 +427,79 @@ class _MyAssessmentState extends State<MyAssessment> {
     final provider = Provider.of<AssessmentCardProvider>(context);
 
     return Scaffold(
-      body: Column(
-        children: [
-          Column(
-            children: [
-              Container(
-                color: Colors.grey,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Assessment cards
-                    Expanded(
-                      child: Column(
-                        children: [
-                          if (provider.isLoading) ...[
-                            const Center(child: CircularProgressIndicator()),
-                          ] else if (provider.cards.isEmpty) ...[
-                            Center(
-                                child: InkWell(
-                                    onTap: () {
-                                      print('Add Cards');
-                                      addAssessmentCardstofirestore
-                                          .addAssessmentCardsToFirestore();
-                                    },
-                                    child: Text('No assessments found'))),
-                          ] else ...[
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: provider.cards.length,
-                              itemBuilder: (context, index) {
-                                final card = provider.cards[index];
-                                return assessmentCard(
-                                  imageUrl: card.imageUrl,
-                                  title: card.title,
-                                  description: card.description,
-                                );
-                              },
-                            ),
-                          ],
-                        ],
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Assessment cards section
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'My Assessments',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  if (provider.isLoading) ...[
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(20),
+                        child: CircularProgressIndicator(),
                       ),
                     ),
+                  ] else if (provider.cards.isEmpty) ...[
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          children: [
+                            const Text(
+                              'No assessments found',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            ElevatedButton(
+                              onPressed: () {
+                                print('Add Cards');
+                                addAssessmentCardstofirestore
+                                    .addAssessmentCardsToFirestore();
+                              },
+                              child: const Text('Add Sample Cards'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ] else ...[
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: provider.cards.length,
+                      itemBuilder: (context, index) {
+                        final card = provider.cards[index];
+                        return assessmentCard(
+                          index: index,
+                          imageUrl: card.imageUrl,
+                          title: card.title,
+                          description: card.description,
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
                     Align(
                       alignment: Alignment.center,
                       child: ElevatedButton(
@@ -482,49 +519,63 @@ class _MyAssessmentState extends State<MyAssessment> {
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 12,
+                            color: Colors.white,
                           ),
                         ),
                       ),
                     ),
                   ],
-                ),
+                ],
               ),
-              // Challenges Section
-              sectionHeader(
-                title: 'Challenges',
-                onViewAll: () {
-                  // Implement Challenges View All
-                },
-              ),
-              challengeCard(),
-              const SizedBox(height: 24),
-              sectionHeader(
-                title: 'Workout Routines',
-                onViewAll: () {
-                  // Implement Workout Routines View All
-                },
-              ),
+            ),
 
-              SizedBox(
-                height: 300,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 10,
-                    itemBuilder: (context, index) {
-                      return workoutCard(
-                        imageUrl:
-                            'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/ac2a53ba-d701-48af-a851-3d6e37454e46.png',
-                        title: 'Sweat Starter',
-                        subtitle: 'Full Body',
-                        tagText: 'Lose Weight',
-                        tagColor: const Color(0xff71aadf),
-                        difficulty: 'Medium',
-                      );
-                    }),
+            const SizedBox(height: 24),
+
+            // Challenges Section
+            sectionHeader(
+              title: 'Challenges',
+              onViewAll: () {
+                // Implement Challenges View All
+              },
+            ),
+            challengeCard(),
+
+            const SizedBox(height: 24),
+
+            // Workout Routines Section
+            sectionHeader(
+              title: 'Workout Routines',
+              onViewAll: () {
+                // Implement Workout Routines View All
+              },
+            ),
+
+            SizedBox(
+              height: 200,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  return Container(
+                    width: 280,
+                    margin: const EdgeInsets.only(right: 12),
+                    child: workoutCard(
+                      imageUrl:
+                          'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/ac2a53ba-d701-48af-a851-3d6e37454e46.png',
+                      title: 'Sweat Starter',
+                      subtitle: 'Full Body',
+                      tagText: 'Lose Weight',
+                      tagColor: const Color(0xff71aadf),
+                      difficulty: 'Medium',
+                    ),
+                  );
+                },
               ),
-            ],
-          ),
-        ],
+            ),
+
+            const SizedBox(height: 24),
+          ],
+        ),
       ),
     );
   }
