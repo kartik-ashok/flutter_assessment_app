@@ -3,6 +3,8 @@ import 'package:flutter_assessment_app/presentation/screens/health_risk_assessme
 import 'package:flutter_assessment_app/presentation/screens/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_assessment_app/presentation/screens/my_assessments.dart';
+import 'package:flutter_assessment_app/provider/assessmen_card_provider.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -10,7 +12,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => AssessmentCardProvider()),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -25,7 +29,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HealthRiskAssessment(),
+      home: MyAssessments(),
     );
   }
 }

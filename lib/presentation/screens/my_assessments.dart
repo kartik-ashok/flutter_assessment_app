@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assessment_app/common/greeting_header.dart';
+import 'package:flutter_assessment_app/domain/repository/assessment_cardstofirestore.dart';
 import 'package:flutter_assessment_app/presentation/screens/my_appointment.dart';
 import 'package:flutter_assessment_app/presentation/screens/responsive_health_risk_assessment.dart';
 import 'package:flutter_assessment_app/presentation/screens/health_risk_assessment.dart';
+import 'package:flutter_assessment_app/provider/assessmen_card_provider.dart';
+import 'package:provider/provider.dart';
 
 class MyAssessments extends StatefulWidget {
   const MyAssessments({super.key});
@@ -14,12 +17,15 @@ class MyAssessments extends StatefulWidget {
 class _MyAssessmentsState extends State<MyAssessments>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  AddAssessmentCardstofirestore addAssessmentCardstofirestore =
+      AddAssessmentCardstofirestore();
 
   final double cardRadius = 12.0;
 
   @override
   void initState() {
     super.initState();
+    Provider.of<AssessmentCardProvider>(context, listen: false).fetchCards();
     _tabController = TabController(length: 2, vsync: this);
   }
 
@@ -424,6 +430,8 @@ class _MyAssessmentsState extends State<MyAssessments>
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<AssessmentCardProvider>(context);
+
     return Scaffold(
       backgroundColor: const Color(0xfff6f7fb),
       appBar: const GreetingAppBar(name: 'Jane'),
@@ -502,21 +510,57 @@ class _MyAssessmentsState extends State<MyAssessments>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   // Assessment cards
-
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: 10,
-                                    itemBuilder: (context, index) =>
-                                        assessmentCard(
-                                      imageUrl:
-                                          'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5dbb5706-a698-444c-8024-414e2908e507.png',
-                                      title: 'Health Risk Assessment',
-                                      description:
-                                          'Identify And Mitigate Health Risks With Precise, Proactive Assessments',
-                                    ),
+                                  Column(
+                                    children: [
+                                      if (provider.isLoading) ...[
+                                        const Center(
+                                            child: CircularProgressIndicator()),
+                                      ] else if (provider.cards.isEmpty) ...[
+                                        Center(
+                                            child: InkWell(
+                                                onTap: () {
+                                                  print('Add Cards');
+                                                  addAssessmentCardstofirestore
+                                                      .addAssessmentCardsToFirestore();
+                                                },
+                                                child: Text(
+                                                    'No assessments found'))),
+                                      ] else ...[
+                                        ListView.builder(
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemCount: provider.cards.length,
+                                          itemBuilder: (context, index) {
+                                            final card = provider.cards[index];
+                                            return assessmentCard(
+                                              imageUrl: card.imageUrl,
+                                              title: card.title,
+                                              description: card.description,
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ],
                                   ),
+                                  // Column(
+                                  //   children: [
+                                  //     ListView.builder(
+                                  //         shrinkWrap: true,
+                                  //         physics:
+                                  //             const NeverScrollableScrollPhysics(),
+                                  //         itemCount: 10,
+                                  //         itemBuilder: (context, index) {
+                                  //           return assessmentCard(
+                                  //             imageUrl:
+                                  //                 'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5dbb5706-a698-444c-8024-414e2908e507.png',
+                                  //             title: 'Health Risk Assessment',
+                                  //             description:
+                                  //                 'Identify And Mitigate Health Risks With Precise, Proactive Assessments',
+                                  //           );
+                                  //         }),
+                                  //   ],
+                                  // ),
                                   Align(
                                     alignment: Alignment.center,
                                     child: ElevatedButton(
