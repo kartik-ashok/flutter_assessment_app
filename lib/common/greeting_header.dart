@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_assessment_app/ASSETS/app_colors.dart';
+import 'package:flutter_assessment_app/assets/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class GreetingAppBar extends StatelessWidget implements PreferredSizeWidget {

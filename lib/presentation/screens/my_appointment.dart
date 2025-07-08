@@ -14,7 +14,7 @@ class MyAppointment extends StatelessWidget {
             const SizedBox(height: 16),
             Expanded(
               child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2, // 2 columns
                   crossAxisSpacing: 10.0, // Optional spacing between columns
                   mainAxisSpacing: 10.0, // Optional spacing between rows
@@ -22,7 +22,7 @@ class MyAppointment extends StatelessWidget {
                 ),
                 itemCount: 10, // Set the number of items
                 itemBuilder: (context, index) {
-                  return AppointmentCard(
+                  return const AppointmentCard(
                     label: 'Cancer 2nd Opinion',
                     color: Colors.red,
                   );

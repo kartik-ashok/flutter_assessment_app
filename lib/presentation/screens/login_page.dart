@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_assessment_app/ASSETS/app_colors.dart';
+import 'package:flutter_assessment_app/assets/app_colors.dart';
 import 'package:flutter_assessment_app/domain/repository/auth_service.dart';
-import 'package:flutter_assessment_app/presentation/screens/my_assessments.dart';
+import 'package:flutter_assessment_app/presentation/screens/my_dashboard.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatefulWidget {
