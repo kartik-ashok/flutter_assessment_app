@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assessment_app/common/greeting_header.dart';
 import 'package:flutter_assessment_app/presentation/screens/my_appointment.dart';
+import 'package:flutter_assessment_app/presentation/screens/responsive_health_risk_assessment.dart';
+import 'package:flutter_assessment_app/presentation/screens/health_risk_assessment.dart';
 
 class MyAssessments extends StatefulWidget {
   const MyAssessments({super.key});
@@ -43,90 +46,93 @@ class _MyAssessmentsState extends State<MyAssessments>
     required String imageUrl,
     required String title,
     required String description,
+    VoidCallback? onTap,
   }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(cardRadius),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0xffeeeeee),
-            blurRadius: 6,
-            offset: Offset(0, 3),
-          )
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Left Image with rounded left corners
-          ClipRRect(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(cardRadius),
-              bottomLeft: Radius.circular(cardRadius),
-            ),
-            child: Image.network(
-              imageUrl,
-              width: 100,
-              height: 116,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
-                width: 100,
-                height: 116,
-                color: Colors.grey[300],
-                alignment: Alignment.center,
-                child: const Icon(Icons.broken_image,
-                    color: Colors.grey, size: 40),
-              ),
-            ),
+    return GestureDetector(
+        onTap: onTap,
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 14),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(cardRadius),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0xffeeeeee),
+                blurRadius: 6,
+                offset: Offset(0, 3),
+              )
+            ],
           ),
-          // Text content and start play icon
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 15,
-                      color: Colors.black87,
-                    ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Left Image with rounded left corners
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(cardRadius),
+                  bottomLeft: Radius.circular(cardRadius),
+                ),
+                child: Image.asset(
+                  imageUrl,
+                  width: 100,
+                  height: 116,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    width: 100,
+                    height: 116,
+                    color: Colors.grey[300],
+                    alignment: Alignment.center,
+                    child: const Icon(Icons.broken_image,
+                        color: Colors.grey, size: 40),
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    description,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13,
-                      color: Color(0xff505050),
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  Row(
+                ),
+              ),
+              // Text content and start play icon
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      bluePlayIcon(),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'Start',
-                        style: TextStyle(
+                      Text(
+                        title,
+                        style: const TextStyle(
                           fontWeight: FontWeight.w700,
-                          fontSize: 14,
-                          color: Color(0xff2a70f4),
+                          fontSize: 15,
+                          color: Colors.black87,
                         ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        description,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 13,
+                          color: Color(0xff505050),
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      Row(
+                        children: [
+                          bluePlayIcon(),
+                          const SizedBox(width: 8),
+                          const Text(
+                            'Start',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: Color(0xff2a70f4),
+                            ),
+                          )
+                        ],
                       )
                     ],
-                  )
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
+                  ),
+                ),
+              )
+            ],
+          ),
+        ));
   }
 
   // Challenge card widget
@@ -392,8 +398,8 @@ class _MyAssessmentsState extends State<MyAssessments>
           ),
           GestureDetector(
             onTap: onViewAll,
-            child: Row(
-              children: const [
+            child: const Row(
+              children: [
                 Text(
                   'View All',
                   style: TextStyle(
@@ -420,177 +426,176 @@ class _MyAssessmentsState extends State<MyAssessments>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xfff6f7fb),
+      appBar: const GreetingAppBar(name: 'Jane'),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Greeting top row with hello and icon
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  RichText(
-                    text: const TextSpan(
-                      text: 'Hello ',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17,
-                        color: Colors.black87,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Greeting top row with hello and icon
+
+                const SizedBox(height: 12),
+
+                Container(
+                  height: 47,
+                  width: 338,
+                  decoration: BoxDecoration(
+                    color: const Color(0xfff1f1f6),
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: TabBar(
+                      controller: _tabController,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      indicatorColor:
+                          Colors.transparent, // 👈 This removes the line
+                      indicatorWeight: 0,
+
+                      indicator: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        color: Colors.white,
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0xffdadada),
+                            blurRadius: 8,
+                            offset: Offset(0, 3),
+                          )
+                        ],
                       ),
-                      children: [
-                        TextSpan(
-                          text: 'Jane',
-                          style: TextStyle(
-                            color: Color(0xff2a70f4),
-                            fontWeight: FontWeight.w700,
-                          ),
-                        )
+                      labelColor: const Color(0xff2a70f4),
+                      unselectedLabelColor: const Color(0xffa8a8b3),
+                      labelStyle: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                      ),
+                      unselectedLabelStyle: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                      tabs: const [
+                        Tab(text: 'My Assessments'),
+                        Tab(text: 'My Appointments'),
                       ],
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: const Color(0xfff1f1f6),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.account_circle_rounded,
-                      color: Color(0xffb2b2b5),
-                      size: 28,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              // Tab bar for "My Assessments" and "My Appointments"
-              Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xfff1f1f6),
-                  borderRadius: BorderRadius.circular(40),
                 ),
-                child: TabBar(
-                  controller: _tabController,
-                  indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    color: Colors.white,
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0xffdadada),
-                        blurRadius: 8,
-                        offset: Offset(0, 3),
-                      )
-                    ],
-                  ),
-                  labelColor: const Color(0xff2a70f4),
-                  unselectedLabelColor: const Color(0xffa8a8b3),
-                  labelStyle: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                  ),
-                  unselectedLabelStyle: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                  ),
-                  tabs: const [
-                    Tab(text: 'My Assessments'),
-                    Tab(text: 'My Appointments'),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 12),
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    // My Assessments tab content
-                    SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Assessment cards
-                          assessmentCard(
-                            imageUrl:
-                                'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/0e3c8f2d-f25e-4e50-8662-cd7043a531c2.png',
-                            title: 'Fitness Assessment',
-                            description:
-                                'Get Started On Your Fitness Goals With Our Physical Assessment And Vital Scan',
-                          ),
-                          assessmentCard(
-                            imageUrl:
-                                'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5dbb5706-a698-444c-8024-414e2908e507.png',
-                            title: 'Health Risk Assessment',
-                            description:
-                                'Identify And Mitigate Health Risks With Precise, Proactive Assessments',
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Implement View all functionality
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xff2a70f4),
-                                minimumSize: const Size(90, 28),
-                                padding: EdgeInsets.zero,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                              child: const Text(
-                                'View all',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700, fontSize: 12),
+
+                const SizedBox(height: 12),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      // My Assessments tab content
+                      SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: Column(
+                          children: [
+                            Container(
+                              color: Colors.grey,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 18, vertical: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Assessment cards
+
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: 10,
+                                    itemBuilder: (context, index) =>
+                                        assessmentCard(
+                                      imageUrl:
+                                          'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5dbb5706-a698-444c-8024-414e2908e507.png',
+                                      title: 'Health Risk Assessment',
+                                      description:
+                                          'Identify And Mitigate Health Risks With Precise, Proactive Assessments',
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        // Implement View all functionality
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            const Color(0xff2a70f4),
+                                        minimumSize: const Size(90, 28),
+                                        padding: EdgeInsets.zero,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        'View all',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 24),
+                                ],
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 24),
-                          // Challenges Section header
-                          sectionHeader(
-                            title: 'Challenges',
-                            onViewAll: () {
-                              // Implement Challenges View All
-                            },
-                          ),
-                          challengeCard(),
-                          const SizedBox(height: 24),
-                          // Workout Routines Section header
-                          sectionHeader(
-                            title: 'Workout Routines',
-                            onViewAll: () {
-                              // Implement Workout Routines View All
-                            },
-                          ),
-                          workoutCard(
-                            imageUrl:
-                                'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/ac2a53ba-d701-48af-a851-3d6e37454e46.png',
-                            title: 'Sweat Starter',
-                            subtitle: 'Full Body',
-                            tagText: 'Lose Weight',
-                            tagColor: const Color(0xff71aadf),
-                            difficulty: 'Medium',
-                          ),
-                          workoutCard(
-                            imageUrl:
-                                'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/91e988bf-1140-4937-bf4e-620ca60992d6.png',
-                            title: 'Strength Builder',
-                            subtitle: 'Upper Body',
-                            tagText: 'Build Muscle',
-                            tagColor: const Color(0xff70c19e),
-                            difficulty: 'Hard',
-                          ),
-                          const SizedBox(height: 20),
-                        ],
+                            const SizedBox(height: 24),
+
+                            // Challenges Section
+                            sectionHeader(
+                              title: 'Challenges',
+                              onViewAll: () {
+                                // Implement Challenges View All
+                              },
+                            ),
+                            challengeCard(),
+                            const SizedBox(height: 24),
+
+                            // Workout Routines Section
+                            sectionHeader(
+                              title: 'Workout Routines',
+                              onViewAll: () {
+                                // Implement Workout Routines View All
+                              },
+                            ),
+                            workoutCard(
+                              imageUrl:
+                                  'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/ac2a53ba-d701-48af-a851-3d6e37454e46.png',
+                              title: 'Sweat Starter',
+                              subtitle: 'Full Body',
+                              tagText: 'Lose Weight',
+                              tagColor: const Color(0xff71aadf),
+                              difficulty: 'Medium',
+                            ),
+                            workoutCard(
+                              imageUrl:
+                                  'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/91e988bf-1140-4937-bf4e-620ca60992d6.png',
+                              title: 'Strength Builder',
+                              subtitle: 'Upper Body',
+                              tagText: 'Build Muscle',
+                              tagColor: const Color(0xff70c19e),
+                              difficulty: 'Hard',
+                            ),
+                            const SizedBox(height: 20),
+                          ],
+                        ),
                       ),
-                    ),
-                    // My Appointments tab content (empty placeholder)
-                    MyAppointment()
-                  ],
+                      // My Appointments tab content
+                      // MyAppointment(),
+                      // Text('My Appointments')
+                      MyAppointment()
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

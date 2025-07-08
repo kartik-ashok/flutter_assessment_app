@@ -3,49 +3,33 @@ import 'package:flutter/material.dart';
 class MyAppointment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print('MyAppointment');
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Hello Jane'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {},
-          ),
-        ],
-      ),
+      // appBar: const GreetingAppBar(name: 'Jane'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // My Assessments and My Appointments
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('My Assessments', style: TextStyle(fontSize: 18)),
-                Text(
-                  'My Appointments',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.blueAccent,
-                  ),
-                ),
-              ],
-            ),
             const SizedBox(height: 16),
-
-            // Appointment Cards
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                AppointmentCard(
-                    label: 'Cancer 2nd Opinion', color: Colors.blue),
-                AppointmentCard(
-                    label: 'Physiotherapy Appointment', color: Colors.pink),
-                AppointmentCard(
-                    label: 'Fitness Appointment', color: Colors.orange),
-              ],
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, // 2 columns
+                  crossAxisSpacing: 10.0, // Optional spacing between columns
+                  mainAxisSpacing: 10.0, // Optional spacing between rows
+                  childAspectRatio: 3 / 2, // Optional: width / height ratio
+                ),
+                itemCount: 10, // Set the number of items
+                itemBuilder: (context, index) {
+                  return AppointmentCard(
+                    label: 'Cancer 2nd Opinion',
+                    color: Colors.red,
+                  );
+                },
+              ),
             ),
+
             const SizedBox(height: 16),
 
             // View All Button

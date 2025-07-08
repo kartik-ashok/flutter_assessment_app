@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_assessment_app/presentation/screens/health_risk_assessment.dart';
 import 'package:flutter_assessment_app/presentation/screens/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_assessment_app/presentation/screens/my_assessments.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -23,7 +25,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: LoginScreen(),
+      home: HealthRiskAssessment(),
     );
   }
 }
