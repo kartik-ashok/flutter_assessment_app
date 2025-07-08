@@ -244,8 +244,10 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:flutter_assessment_app/ASSETS/app_colors.dart';
 import 'package:flutter_assessment_app/domain/repository/auth_service.dart';
 import 'package:flutter_assessment_app/presentation/screens/my_assessments.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -263,93 +265,135 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildLanguageSelector() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      width: 81,
+      height: 34,
+      padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
           border: Border.all(color: Colors.black54),
-          borderRadius: BorderRadius.circular(20)),
-      child: const Row(
-        mainAxisSize: MainAxisSize.min,
+          borderRadius: BorderRadius.circular(16)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('🇬🇧', style: TextStyle(fontSize: 18)),
-          SizedBox(width: 4),
-          Text('Eng', style: TextStyle(fontSize: 14)),
-          SizedBox(width: 4),
-          Icon(Icons.keyboard_arrow_down, size: 18),
+          Image.asset('assets/images/197374 1.png', width: 18, height: 18),
+          Text(
+            'Eng',
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+              color: AppColors.secondaryGrey,
+            ),
+          ),
+          const Icon(Icons.keyboard_arrow_down, size: 18),
         ],
       ),
     );
   }
 
   Widget _buildEmailInput() {
-    return TextFormField(
-      controller: _emailController,
-      keyboardType: TextInputType.emailAddress,
-      decoration: InputDecoration(
-        hintText: 'Enter your email',
-        prefixIcon: const Icon(Icons.email_outlined),
-        contentPadding: const EdgeInsets.symmetric(vertical: 14),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
-          borderSide: BorderSide(color: Colors.grey.shade300),
+    return SizedBox(
+      width: 301,
+      height: 52,
+      child: TextFormField(
+        controller: _emailController,
+        keyboardType: TextInputType.emailAddress,
+        style: GoogleFonts.poppins(
+          fontWeight: FontWeight.w400,
+          fontSize: 14,
+          color: AppColors.secondaryGrey,
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
-          borderSide: BorderSide(color: Colors.blue.shade700, width: 2),
+        decoration: InputDecoration(
+          hintText: 'Enter your email',
+          prefixIcon: const Icon(Icons.email_outlined),
+          contentPadding: const EdgeInsets.symmetric(vertical: 14),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Colors.blue.shade700, width: 2),
+          ),
+          filled: true,
+          fillColor: Colors.grey.shade100,
         ),
-        filled: true,
-        fillColor: Colors.grey.shade100,
+        validator: (value) {
+          if (value == null || value.isEmpty) return 'Email is required';
+          if (!value.contains('@')) return 'Enter a valid email';
+          return null;
+        },
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) return 'Email is required';
-        if (!value.contains('@')) return 'Enter a valid email';
-        return null;
-      },
     );
   }
 
   Widget _buildPasswordInput() {
-    return TextFormField(
-      controller: _passwordController,
-      obscureText: true,
-      decoration: InputDecoration(
-        hintText: 'Enter your password',
-        prefixIcon: const Icon(Icons.lock_outline),
-        contentPadding: const EdgeInsets.symmetric(vertical: 14),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
-          borderSide: BorderSide(color: Colors.grey.shade300),
+    return SizedBox(
+      width: 301,
+      height: 52,
+      child: TextFormField(
+        controller: _passwordController,
+        obscureText: true,
+        style: GoogleFonts.poppins(
+          fontWeight: FontWeight.w400,
+          fontSize: 14,
+          color: AppColors.secondaryGrey,
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
-          borderSide: BorderSide(color: Colors.blue.shade700, width: 2),
+        decoration: InputDecoration(
+          hintText: 'Enter your password',
+          prefixIcon: const Icon(Icons.lock_outline),
+          contentPadding: const EdgeInsets.symmetric(vertical: 14),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(color: Colors.blue.shade700, width: 2),
+          ),
+          filled: true,
+          fillColor: Colors.grey.shade100,
         ),
-        filled: true,
-        fillColor: Colors.grey.shade100,
+        validator: (value) {
+          if (value == null || value.isEmpty) return 'Password is required';
+          if (value.length < 6) return 'Password must be at least 6 characters';
+          return null;
+        },
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) return 'Password is required';
-        if (value.length < 6) return 'Password must be at least 6 characters';
-        return null;
-      },
     );
   }
 
   Widget _buildContinueButton(BuildContext context) {
-    return ElevatedButton.icon(
-      icon: const Icon(Icons.arrow_forward, size: 20),
-      label: const Text(
-        'Continue',
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-      ),
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(40),
+    return SizedBox(
+      height: 57,
+      width: 190,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(28.5),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 32),
+          backgroundColor: AppColors.primaryBlue,
+          elevation: 4,
         ),
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 32),
-        backgroundColor: const Color(0xFF256EFF),
-        elevation: 4,
+        onPressed: () => _submit(context),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+              'Continue',
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: AppColors.white,
+              ),
+            ),
+            const Icon(
+              Icons.arrow_forward,
+              size: 20,
+              color: AppColors.white,
+            ),
+          ],
+        ),
       ),
-      onPressed: () => _submit(context),
     );
   }
 
@@ -370,18 +414,18 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildBottomWave(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: SizedBox(
-        height: 180,
-        width: double.infinity,
-        child: CustomPaint(
-          painter: BottomWavePainter(),
-        ),
-      ),
-    );
-  }
+  // Widget _buildBottomWave(BuildContext context) {
+  //   return Align(
+  //     alignment: Alignment.bottomCenter,
+  //     child: SizedBox(
+  //       height: 180,
+  //       width: double.infinity,
+  //       child: CustomPaint(
+  //         painter: BottomWavePainter(),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   void _submit(BuildContext context) async {
     print('Submit button pressed');
@@ -422,92 +466,113 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          Column(
+      bottomNavigationBar: SizedBox(
+        child: SizedBox(
+          child: Stack(
             children: [
-              const SizedBox(height: 48),
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 16),
-                  child: _buildLanguageSelector(),
-                ),
+              Image.asset(
+                'assets/images/Vector 58.png',
+                fit: BoxFit.cover,
               ),
-              const SizedBox(height: 36),
-              Center(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.asset(
-                        'assets/images/allycare.png',
-                        width: 202,
-                        height: 66,
-                      ),
-                      const SizedBox(height: 32),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 32),
-                        child: _buildEmailInput(),
-                      ),
-                      const SizedBox(height: 32),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 32),
-                        child: _buildPasswordInput(),
-                      ),
-                      const SizedBox(height: 24),
-                      _buildContinueButton(context),
-                    ],
-                  ),
-                ),
-              ),
-              const Spacer(),
-              const SizedBox(height: 64),
+              Image.asset('assets/images/Vector 57.png'),
+              Positioned(
+                  child: Align(
+                alignment: Alignment.bottomCenter,
+                child: _buildSupport(),
+              ))
             ],
           ),
-          _buildBottomWave(context),
-          Positioned(
-            bottom: 28,
-            width: MediaQuery.of(context).size.width,
-            child: _buildSupport(),
-          )
+        ),
+      ),
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 48),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: _buildLanguageSelector(),
+                  ),
+                ),
+                const SizedBox(height: 141),
+                Center(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset(
+                          'assets/images/allyCare.png',
+                          width: 202,
+                          height: 66,
+                        ),
+                        const SizedBox(height: 40),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 32),
+                          child: _buildEmailInput(),
+                        ),
+                        const SizedBox(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 32),
+                          child: _buildPasswordInput(),
+                        ),
+                        const SizedBox(height: 26),
+                        _buildContinueButton(context),
+                      ],
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                const SizedBox(height: 64),
+              ],
+            ),
+          ),
+          // _buildBottomWave(context),
+          // Positioned(
+          //   bottom: 28,
+          //   width: MediaQuery.of(context).size.width,
+          //   child: _buildSupport(),
+          // )
         ],
       ),
     );
   }
 }
 
-class BottomWavePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint1 = Paint()..color = const Color(0xFF2B6BE8);
-    final path1 = Path();
-    path1.moveTo(0, size.height * 0.5);
-    path1.quadraticBezierTo(size.width * 0.25, size.height * 0.7,
-        size.width * 0.5, size.height * 0.5);
-    path1.quadraticBezierTo(
-        size.width * 0.75, size.height * 0.3, size.width, size.height * 0.5);
-    path1.lineTo(size.width, size.height);
-    path1.lineTo(0, size.height);
-    path1.close();
-    canvas.drawPath(path1, paint1);
+// class BottomWavePainter extends CustomPainter {
+//   @override
+//   void paint(Canvas canvas, Size size) {
+//     final paint1 = Paint()..color = const Color(0xFF2B6BE8);
+//     final path1 = Path();
+//     path1.moveTo(0, size.height * 0.5);
+//     path1.quadraticBezierTo(size.width * 0.25, size.height * 0.7,
+//         size.width * 0.5, size.height * 0.5);
+//     path1.quadraticBezierTo(
+//         size.width * 0.75, size.height * 0.3, size.width, size.height * 0.5);
+//     path1.lineTo(size.width, size.height);
+//     path1.lineTo(0, size.height);
+//     path1.close();
+//     canvas.drawPath(path1, paint1);
 
-    final paint2 = Paint()..color = const Color(0xFF7BAAFB);
-    final path2 = Path();
-    path2.moveTo(0, size.height * 0.6);
-    path2.quadraticBezierTo(size.width * 0.25, size.height * 0.85,
-        size.width * 0.5, size.height * 0.6);
-    path2.quadraticBezierTo(
-        size.width * 0.75, size.height * 0.35, size.width, size.height * 0.6);
-    path2.lineTo(size.width, size.height);
-    path2.lineTo(0, size.height);
-    path2.close();
-    canvas.drawPath(path2, paint2);
-  }
+//     final paint2 = Paint()..color = const Color(0xFF7BAAFB);
+//     final path2 = Path();
+//     path2.moveTo(0, size.height * 0.6);
+//     path2.quadraticBezierTo(size.width * 0.25, size.height * 0.85,
+//         size.width * 0.5, size.height * 0.6);
+//     path2.quadraticBezierTo(
+//         size.width * 0.75, size.height * 0.35, size.width, size.height * 0.6);
+//     path2.lineTo(size.width, size.height);
+//     path2.lineTo(0, size.height);
+//     path2.close();
+//     canvas.drawPath(path2, paint2);
+//   }
 
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
-  }
-}
+//   @override
+//   bool shouldRepaint(covariant CustomPainter oldDelegate) {
+//     return false;
+//   }
+// }
