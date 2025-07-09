@@ -7,12 +7,12 @@ import 'package:flutter_assessment_app/presentation/screens/my_appointment.dart'
 
 class AssessmentCardProvider with ChangeNotifier {
   List<AssessmentCardModel> _cards = [];
-  List<HealthService> _appointmentCards = [];
+  List<AppointmentModel> _appointmentCards = [];
   List<WorkoutRoutine> _workoutRoutins = [];
   bool _isLoading = false;
 
   List<AssessmentCardModel> get cards => _cards;
-  List<HealthService> get appointmentCard => _appointmentCards;
+  List<AppointmentModel> get appointmentCard => _appointmentCards;
   List<WorkoutRoutine> get workoutRoutins => _workoutRoutins;
   bool get isLoading => _isLoading;
 
@@ -44,7 +44,7 @@ class AssessmentCardProvider with ChangeNotifier {
           await FirebaseFirestore.instance.collection('healthServices').get();
 
       _appointmentCards = snapshot.docs
-          .map((doc) => HealthService.fromMap(doc.data()))
+          .map((doc) => AppointmentModel.fromMap(doc.data(), doc.id))
           .toList();
     } catch (e) {
       print('Error fetching cards: $e');

@@ -1,9 +1,11 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_assessment_app/assets/app_colors.dart';
 import 'package:flutter_assessment_app/assets/apptext_styles.dart';
 import 'package:flutter_assessment_app/assets/image_paths.dart';
 import 'package:flutter_assessment_app/domain/repository/auth_service.dart';
 import 'package:flutter_assessment_app/presentation/screens/my_dashboard.dart';
+import 'package:flutter_assessment_app/presentation/widgets/awesome_snackbar.dart';
 import 'package:flutter_assessment_app/utils/responsive_utils.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool isLogin = false;
   final ValueNotifier<bool> _isObscure = ValueNotifier<bool>(true);
+  final ValueNotifier<bool> _isLoading = ValueNotifier<bool>(false);
 
   void _togglePasswordVisibility() {
     _isObscure.value = !_isObscure.value;
@@ -34,7 +37,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildLanguageSelector() {
     return Container(
       width: ResponsiveSize.width(83),
-      height: ResponsiveSize.height(34),
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
           border: Border.all(color: Colors.black54),
@@ -66,10 +68,11 @@ class _LoginScreenState extends State<LoginScreen> {
         decoration: InputDecoration(
           hintText: 'Enter your email',
           prefixIcon: const Icon(Icons.email_outlined),
-          contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: AppColors.tertiaryGrey),
+            borderSide: const BorderSide(color: AppColors.tertiaryGrey),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
@@ -121,7 +124,8 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: _togglePasswordVisibility,
             ),
 
-            contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(color: Colors.grey.shade300),
@@ -174,7 +178,12 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text('Continue', style: AppTextStyles.size16wboldBlack),
+            ValueListenableBuilder(
+                valueListenable: _isLoading,
+                builder: (context, _isLoading, child) {
+                  return Text(_isLoading ? 'Loading...' : 'Continue',
+                      style: AppTextStyles.size16wboldBlack);
+                }),
             const Icon(
               Icons.arrow_forward,
               size: 20,
@@ -187,16 +196,16 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildSupport() {
-    return const Padding(
-      padding: EdgeInsets.only(bottom: 12),
+    return Padding(
+      padding: EdgeInsets.only(bottom: ResponsiveSize.height(12)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.headset_mic_outlined, color: Colors.white),
-          SizedBox(width: 8),
+          Image.asset(ImagePaths.headphone),
+          SizedBox(width: ResponsiveSize.width(8)),
           Text(
             'Support',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: AppTextStyles.size16w500white,
           ),
         ],
       ),
@@ -204,11 +213,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _submit(BuildContext context) async {
-    print('Submit button pressed');
-
+    _isLoading.value = true;
     if (_formKey.currentState != null && _formKey.currentState!.validate()) {
-      print("Form is valid");
-
       final email = _emailController.text.trim();
       final password = _passwordController.text.trim();
 
@@ -220,29 +226,28 @@ class _LoginScreenState extends State<LoginScreen> {
       }
 
       if (result != null) {
-        print('Error: $result');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(result)),
+          const SnackBar(
+              duration: Duration(seconds: 2),
+              content: Text(
+                  "The email address is already in use by another account.")),
         );
       } else {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => MyDashboard()),
+          MaterialPageRoute(builder: (_) => const MyDashboard()),
         );
       }
     } else {
-      print('Form is not valid');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter valid email and password')),
-      );
+      const SnackBar(
+          duration: Duration(seconds: 2),
+          content: Text("Please enter valid email and password"));
     }
+    _isLoading.value = false;
   }
 
   @override
   Widget build(BuildContext context) {
-    // return
-    // @override
-// Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true, // keep as-is
       backgroundColor: Colors.white,
@@ -272,84 +277,79 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
 
-      // ←– REPLACE your old SingleChildScrollView(...) with this:
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight,
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-              child: IntrinsicHeight(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      SizedBox(height: ResponsiveSize.height(48)),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 16),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
+                ),
+                child: IntrinsicHeight(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.topRight,
                           child: _buildLanguageSelector(),
                         ),
-                      ),
-                      SizedBox(height: ResponsiveSize.height(141)),
-                      Center(
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Image.asset(
-                                'assets/images/allyCare.png',
-                                width: ResponsiveSize.width(202),
-                                height: ResponsiveSize.height(66),
-                              ),
-                              SizedBox(height: ResponsiveSize.height(40)),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: ResponsiveSize.width(32)),
-                                child: _buildEmailInput(),
-                              ),
-                              SizedBox(height: ResponsiveSize.height(20)),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: ResponsiveSize.width(32)),
-                                child: _buildPasswordInput(),
-                              ),
-                              SizedBox(height: ResponsiveSize.height(26)),
-                              _buildContinueButton(context),
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    isLogin = !isLogin;
-                                  });
-                                },
-                                child: Text(
-                                  isLogin
-                                      ? "Don't have an account? Sign Up"
-                                      : "Already have an account? Log In",
-                                  style: AppTextStyles.size14w500Blue,
+                        SizedBox(height: ResponsiveSize.height(100)),
+                        Center(
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset(
+                                  ImagePaths.allyCare,
+                                  width: ResponsiveSize.width(202),
+                                  height: ResponsiveSize.height(66),
                                 ),
-                              ),
-                            ],
+                                SizedBox(height: ResponsiveSize.height(40)),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: ResponsiveSize.width(32)),
+                                  child: _buildEmailInput(),
+                                ),
+                                SizedBox(height: ResponsiveSize.height(20)),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: ResponsiveSize.width(32)),
+                                  child: _buildPasswordInput(),
+                                ),
+                                SizedBox(height: ResponsiveSize.height(26)),
+                                _buildContinueButton(context),
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isLogin = !isLogin;
+                                    });
+                                  },
+                                  child: Text(
+                                    isLogin
+                                        ? "Don't have an account? Sign Up"
+                                        : "Already have an account? Log In",
+                                    style: AppTextStyles.size14w500Blue,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-
-                      // This Spacer pushes content up when there's extra room
-                      const Spacer(),
-                    ],
+                        const Spacer(),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

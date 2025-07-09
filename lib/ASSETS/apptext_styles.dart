@@ -88,4 +88,10 @@ class AppTextStyles {
     fontSize: ResponsiveSize.font(24),
     color: AppColors.black,
   );
+
+  static final TextStyle size16w500white = GoogleFonts.poppins(
+    fontWeight: FontWeight.w500,
+    fontSize: ResponsiveSize.font(16),
+    color: AppColors.white,
+  );
 }

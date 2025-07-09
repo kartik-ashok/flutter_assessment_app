@@ -4,6 +4,7 @@ import 'package:flutter_assessment_app/domain/repository/assessment_cardstofires
 import 'package:flutter_assessment_app/presentation/screens/my_appointment.dart';
 import 'package:flutter_assessment_app/presentation/screens/my_assessment.dart';
 import 'package:flutter_assessment_app/provider/provider.dart';
+import 'package:flutter_assessment_app/utils/responsive_utils.dart';
 import 'package:provider/provider.dart';
 
 class MyDashboard extends StatefulWidget {
@@ -40,10 +41,8 @@ class _MyAssessmentsState extends State<MyDashboard>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 12),
+              SizedBox(height: ResponsiveSize.height(12)),
               Container(
-                height: 47,
-                width: 338,
                 decoration: BoxDecoration(
                   color: const Color(0xfff1f1f6),
                   borderRadius: BorderRadius.circular(40),
@@ -51,6 +50,8 @@ class _MyAssessmentsState extends State<MyDashboard>
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: TabBar(
+                    dividerColor: Colors.transparent,
+
                     controller: _tabController,
                     indicatorSize: TabBarIndicatorSize.tab,
                     indicatorColor:

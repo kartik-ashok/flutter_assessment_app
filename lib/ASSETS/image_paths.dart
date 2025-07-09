@@ -20,4 +20,6 @@ class ImagePaths {
   static const String ic_security = '${imageBasePath}ic_security.png';
   static const String flag = '${imageBasePath}flag.png';
   static const String squats = '${imageBasePath}squats.png';
+  static const String allyCare = '${imageBasePath}allyCare.png';
+  static const String headphone = '${imageBasePath}headphone.png';
 }

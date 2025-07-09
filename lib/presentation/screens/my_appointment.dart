@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_assessment_app/assets/app_colors.dart';
 import 'package:flutter_assessment_app/assets/apptext_styles.dart';
 import 'package:flutter_assessment_app/assets/image_paths.dart';
+import 'package:flutter_assessment_app/domain/repository/appointment_service.dart';
+import 'package:flutter_assessment_app/presentation/screens/list_of_appointments.dart';
 import 'package:flutter_assessment_app/provider/provider.dart';
 import 'package:flutter_assessment_app/utils/responsive_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class MyAppointment extends StatefulWidget {
   @override
@@ -30,224 +34,223 @@ class _MyAppointmentState extends State<MyAppointment> {
     ImagePaths.halfSquats,
   ];
 
+  final AppointmentService appointmentService = AppointmentService();
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<AssessmentCardProvider>(context);
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // const SizedBox(height: 16),
-
-          // Appointments Grid
-          // const Text(
-          //   'My Appointments',
-          //   style: TextStyle(
-          //     fontSize: 18,
-          //     fontWeight: FontWeight.w700,
-          //     color: Colors.black87,
-          //   ),
-          // ),
-          // const SizedBox(height: 16),
-          if (provider.isLoading) ...[
-            const Center(
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: AppColors.primaryBlue,
-                ),
-              ),
-            ),
-          ] else if (provider.cards.isEmpty) ...[
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    const Text(
-                      'No assessments found',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('Add Sample Cards'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ] else ...[
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10.0,
-                mainAxisSpacing: 10.0,
-                childAspectRatio: 3 / 2,
-              ),
-              itemCount: showAll
-                  ? provider.appointmentCard.length
-                  : 3, // Reduced count for better layout
-              itemBuilder: (context, index) {
-                final appointments = [
-                  {'logo': ImagePaths.cancer, 'color': Color(0xffC6D9FF)},
-                  {'logo': ImagePaths.therapy, 'color': Color(0xffE9C6FF)},
-                  {'logo': ImagePaths.dambles, 'color': Color(0xffFFD4C6)},
-                ];
-
-                final appointment = appointments[index % appointments.length];
-                return AppointmentCard(
-                  logo: appointment['logo'] as String,
-                  color: appointment['color'] as Color,
-                  label: provider.appointmentCard[index].name +
-                      provider.appointmentCard[index].type,
-                );
-              },
-            ),
-          ],
-          const SizedBox(height: 16),
-
-          // View All Button
-          Align(
-            alignment: Alignment.center,
-            child: ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  showAll = !showAll;
-                });
-                // Implement View all functionality
-                // Implement view all appointments
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff2a70f4),
-                minimumSize: const Size(90, 28),
-                padding: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              child: const Text(
-                'View all',
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 12,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 24),
-
-          // Challenges Section
-          const Text(
-            'Challenges',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 12),
-          challengeCard(),
-
-          const SizedBox(height: 24),
-
-          // Workout Routines Section
-          sectionHeader(
-            title: 'Workout Routines',
-            onViewAll: () {
-              // Implement Workout Routines View All
-            },
-          ),
-
-          // SizedBox(
-          //   height: 200,
-          //   child: ListView.builder(
-          //     scrollDirection: Axis.horizontal,
-          //     itemCount: 10,
-          //     itemBuilder: (context, index) {
-          //       return Container(
-          //         width: 280,
-          //         margin: const EdgeInsets.only(right: 12),
-          //         child: workoutCard(
-          //           imageUrl: ImagePaths.squats,
-          //           title: 'Sweat Starter',
-          //           subtitle: 'Full Body',
-          //           tagText: 'Lose Weight',
-          //           tagColor: const Color(0xff71aadf),
-          //           difficulty: 'Medium',
-          //         ),
-          //       );
-          //     },
-          //   ),
-          // ),
-          SizedBox(
-            height: ResponsiveSize.height(200),
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: provider.workoutRoutins.length,
-              itemBuilder: (context, index) {
-                if (provider.isLoading) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(20),
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: AppColors.primaryBlue,
-                      ),
-                    ),
-                  );
-                }
-                if (provider.workoutRoutins.isEmpty) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'No assessments found',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          ElevatedButton(
-                            onPressed: () {},
-                            child: const Text('Add Sample Cards'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }
-
-                return Container(
-                  width: 280,
+    return RefreshIndicator(
+      backgroundColor: Colors.white,
+      color: AppColors.primaryBlue,
+      onRefresh: () {
+        print("Hello");
+        return appointmentService.cacheAppointmentCards();
+      },
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (provider.isLoading) ...[
+              Shimmer.fromColors(
+                baseColor: Colors.grey.shade300,
+                highlightColor: Colors.grey.shade100,
+                child: Container(
+                  height: 280,
                   margin: const EdgeInsets.only(right: 12),
-                  child: workoutCard(
-                    imageUrl: routineImags[index % routineImags.length],
-                    title: provider.workoutRoutins[index].name,
-                    subtitle: provider.workoutRoutins[index].bodyType,
-                    tagText: provider.workoutRoutins[index].weightGoal,
-                    tagColor: const Color(0xff71aadf),
-                    difficulty: provider.workoutRoutins[index].difficultyLevel,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                );
-              },
-            ),
-          ),
+                ),
+              ),
+            ] else if (provider.cards.isEmpty) ...[
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      const Text(
+                        'No assessments found',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      ElevatedButton(
+                        onPressed: () {},
+                        child: const Text('Add Sample Cards'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ] else ...[
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10.0,
+                  mainAxisSpacing: 10.0,
+                  childAspectRatio: 3 / 2,
+                ),
+                itemCount: provider.appointmentCard.length <= 3
+                    ? provider.appointmentCard.length
+                    : 3,
+                // showAll
+                //     ? provider.appointmentCard.length
+                //     : 3, // Reduced count for better layout
+                itemBuilder: (context, index) {
+                  final appointments = [
+                    {
+                      'logo': ImagePaths.cancer,
+                      'color': const Color(0xffC6D9FF)
+                    },
+                    {
+                      'logo': ImagePaths.therapy,
+                      'color': const Color(0xffE9C6FF)
+                    },
+                    {
+                      'logo': ImagePaths.dambles,
+                      'color': const Color(0xffFFD4C6)
+                    },
+                  ];
 
-          const SizedBox(height: 24),
-        ],
+                  final appointment = appointments[index % appointments.length];
+                  return AppointmentCard(
+                    logo: appointment['logo'] as String,
+                    color: appointment['color'] as Color,
+                    label: provider.appointmentCard[index].name +
+                        provider.appointmentCard[index].type,
+                  );
+                },
+              ),
+            ],
+            const SizedBox(height: 16),
+
+            // View All Button
+            Align(
+              alignment: Alignment.center,
+              child: ElevatedButton(
+                onPressed: () {
+                  // use pageTransion
+
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: ListOfAppointments(
+                        appointments: provider.appointmentCard,
+                      ),
+                      type: PageTransitionType.rightToLeft,
+                      duration: const Duration(milliseconds: 300),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xff2a70f4),
+                  minimumSize: const Size(90, 28),
+                  padding: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: const Text(
+                  'View all',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 12,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // Challenges Section
+            const Text(
+              'Challenges',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 12),
+            challengeCard(),
+
+            const SizedBox(height: 24),
+
+            sectionHeader(
+              title: 'Workout Routines',
+              onViewAll: () {},
+            ),
+
+            SizedBox(
+              height: ResponsiveSize.height(200),
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: provider.workoutRoutins.length,
+                itemBuilder: (context, index) {
+                  if (provider.isLoading) {
+                    return Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.grey.shade100,
+                      child: Container(
+                        width: 280,
+                        margin: const EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    );
+                  }
+                  if (provider.workoutRoutins.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          children: [
+                            const Text(
+                              'No assessments found',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            ElevatedButton(
+                              onPressed: () {},
+                              child: const Text('Add Sample Cards'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  return Container(
+                    margin: const EdgeInsets.only(right: 12),
+                    child: workoutCard(
+                      imageUrl: routineImags[index % routineImags.length],
+                      title: provider.workoutRoutins[index].name,
+                      subtitle: provider.workoutRoutins[index].bodyType,
+                      tagText: provider.workoutRoutins[index].weightGoal,
+                      tagColor: const Color(0xff71aadf),
+                      difficulty:
+                          provider.workoutRoutins[index].difficultyLevel,
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            const SizedBox(height: 24),
+          ],
+        ),
       ),
     );
   }
@@ -258,7 +261,7 @@ class AppointmentCard extends StatelessWidget {
   final Color color;
   final String label;
 
-  const AppointmentCard({
+  AppointmentCard({
     super.key,
     required this.logo,
     required this.color,
@@ -385,9 +388,10 @@ Widget challengeCard() {
               ),
               SizedBox(height: ResponsiveSize.height(4)),
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                width: 120,
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(12),
                   color: AppColors.white,
                 ),
                 child: Row(
@@ -597,11 +601,11 @@ class WorkoutRoutineCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Sweat Starter', style: TextStyle(fontSize: 18)),
+          const Text('Sweat Starter', style: TextStyle(fontSize: 18)),
           SizedBox(height: ResponsiveSize.height(8)),
-          Text('Full Body', style: TextStyle(fontSize: 16)),
+          const Text('Full Body', style: TextStyle(fontSize: 16)),
           SizedBox(height: ResponsiveSize.height(8)),
-          Text('Difficulty: Medium', style: TextStyle(fontSize: 14)),
+          const Text('Difficulty: Medium', style: TextStyle(fontSize: 14)),
         ],
       ),
     );

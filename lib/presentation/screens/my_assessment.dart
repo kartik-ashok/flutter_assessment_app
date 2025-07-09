@@ -1,13 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_assessment_app/ASSETS/apptext_styles.dart';
 import 'package:flutter_assessment_app/assets/app_colors.dart';
 import 'package:flutter_assessment_app/assets/image_paths.dart';
 import 'package:flutter_assessment_app/domain/repository/assessment_cardstofirestore.dart';
+import 'package:flutter_assessment_app/model/healthcare_service.dart';
 import 'package:flutter_assessment_app/presentation/screens/health_risk_assessment.dart';
 import 'package:flutter_assessment_app/provider/provider.dart';
 import 'package:flutter_assessment_app/utils/responsive_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class MyAssessment extends StatefulWidget {
   const MyAssessment({super.key});
@@ -51,6 +54,8 @@ class _MyAssessmentState extends State<MyAssessment> {
     required String imageUrl,
     required String title,
     required String description,
+    required AppointmentModel appointment,
+
     // VoidCallback? onTap,
   }) {
     return Container(
@@ -256,10 +261,11 @@ class _MyAssessmentState extends State<MyAssessment> {
                 ),
                 SizedBox(height: ResponsiveSize.height(4)),
                 Container(
+                  width: 120,
                   padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(12),
                     color: AppColors.white,
                   ),
                   child: Row(
@@ -438,195 +444,207 @@ class _MyAssessmentState extends State<MyAssessment> {
     final provider = Provider.of<AssessmentCardProvider>(context);
 
     return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Assessment cards section
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (provider.isLoading) ...[
-                    const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(20),
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: AppColors.primaryBlue,
-                        ),
-                      ),
-                    ),
-                  ] else if (provider.cards.isEmpty) ...[
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          children: [
-                            const Text(
-                              'No assessments found',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            SizedBox(height: ResponsiveSize.height(12)),
-                            ElevatedButton(
-                              onPressed: () {},
-                              child: const Text('Add Sample Cards'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ] else ...[
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: showAll ? provider.cards.length : 1,
-                      itemBuilder: (context, index) {
-                        final card = provider.cards[index];
-                        return InkWell(
-                          onTap: () {
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (context) {
-                                return HealthRiskAssessment(
-                                  imageUrl: card.imageUrl,
-                                  title: card.title,
-                                  description: card.description,
-                                );
-                              },
-                            ));
-                          },
-                          child: assessmentCard(
-                            index: index,
-                            imageUrl: card.imageUrl,
-                            title: card.title,
-                            description: card.description,
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(height: ResponsiveSize.height(16)),
-                    Align(
-                      alignment: Alignment.center,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            showAll = !showAll;
-                          });
-                          // Implement View all functionality
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xff2a70f4),
-                          minimumSize: const Size(90, 28),
-                          padding: EdgeInsets.zero,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        child: const Text(
-                          'View all',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 12,
+      body: RefreshIndicator(
+        backgroundColor: Colors.white,
+        color: AppColors.primaryBlue,
+        onRefresh: () {
+          return addAssessmentCardstofirestore.cacheAssessmentCards();
+        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Assessment cards section
+                    if (provider.isLoading) ...[
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: Container(
+                          height: 280,
+                          margin: const EdgeInsets.only(right: 12),
+                          decoration: BoxDecoration(
                             color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-
-            SizedBox(height: ResponsiveSize.height(24)),
-
-            // Challenges Section
-            sectionHeader(
-              title: 'Challenges',
-              onViewAll: () {
-                // Implement Challenges View All
-              },
-            ),
-            challengeCard(),
-
-            // SizedBox(height: ResponsiveSize.height(24)),
-
-            // Workout Routines Section
-            sectionHeader(
-              title: 'Workout Routines',
-              onViewAll: () {
-                // Implement Workout Routines View All
-              },
-            ),
-
-            SizedBox(
-              height: ResponsiveSize.height(200),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: provider.workoutRoutins.length,
-                itemBuilder: (context, index) {
-                  if (provider.isLoading) {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(20),
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: AppColors.primaryBlue,
-                        ),
-                      ),
-                    );
-                  }
-                  if (provider.workoutRoutins.isEmpty) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          children: [
-                            const Text(
-                              'No assessments found',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey,
+                    ] else if (provider.cards.isEmpty) ...[
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            children: [
+                              const Text(
+                                'No assessments found',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 12),
-                            ElevatedButton(
-                              onPressed: () {},
-                              child: const Text('Add Sample Cards'),
-                            ),
-                          ],
+                              SizedBox(height: ResponsiveSize.height(12)),
+                              ElevatedButton(
+                                onPressed: () {},
+                                child: const Text('Add Sample Cards'),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    );
-                  }
+                    ] else ...[
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: provider.cards.length,
+                        itemBuilder: (context, index) {
+                          final card = provider.cards[index];
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (context) {
+                                  return HealthRiskAssessment(
+                                    imageUrl: card.imageUrl,
+                                    title: card.title,
+                                    description: card.description,
+                                  );
+                                },
+                              ));
+                            },
+                            child: assessmentCard(
+                              index: index,
+                              imageUrl: card.imageUrl,
+                              title: card.title,
+                              description: card.description,
+                              appointment: provider.appointmentCard[index],
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(height: ResponsiveSize.height(16)),
+                      Align(
+                        alignment: Alignment.center,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              showAll = !showAll;
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xff2a70f4),
+                            minimumSize: const Size(90, 28),
+                            padding: EdgeInsets.zero,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          child: const Text(
+                            'View all',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 12,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
 
-                  return Container(
-                    width: 280,
-                    margin: const EdgeInsets.only(right: 12),
-                    child: workoutCard(
-                      imageUrl: routineImags[index % routineImags.length],
-                      title: provider.workoutRoutins[index].name,
-                      subtitle: provider.workoutRoutins[index].bodyType,
-                      tagText: provider.workoutRoutins[index].weightGoal,
-                      tagColor: const Color(0xff71aadf),
-                      difficulty:
-                          provider.workoutRoutins[index].difficultyLevel,
-                    ),
-                  );
+              SizedBox(height: ResponsiveSize.height(24)),
+
+              // Challenges Section
+              sectionHeader(
+                title: 'Challenges',
+                onViewAll: () {
+                  // Implement Challenges View All
                 },
               ),
-            ),
+              challengeCard(),
 
-            const SizedBox(height: 24),
-          ],
+              // SizedBox(height: ResponsiveSize.height(24)),
+
+              // Workout Routines Section
+              sectionHeader(
+                title: 'Workout Routines',
+                onViewAll: () {
+                  // Implement Workout Routines View All
+                },
+              ),
+
+              SizedBox(
+                height: ResponsiveSize.height(200),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: provider.workoutRoutins.length,
+                  itemBuilder: (context, index) {
+                    if (provider.isLoading) {
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: Container(
+                          width: 280,
+                          margin: const EdgeInsets.only(right: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      );
+                    }
+                    if (provider.workoutRoutins.isEmpty) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            children: [
+                              const Text(
+                                'No assessments found',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              ElevatedButton(
+                                onPressed: () {},
+                                child: const Text('Add Sample Cards'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+
+                    return Container(
+                      margin: const EdgeInsets.only(right: 12),
+                      child: workoutCard(
+                        imageUrl: routineImags[index % routineImags.length],
+                        title: provider.workoutRoutins[index].name,
+                        subtitle: provider.workoutRoutins[index].bodyType,
+                        tagText: provider.workoutRoutins[index].weightGoal,
+                        tagColor: const Color(0xff71aadf),
+                        difficulty:
+                            provider.workoutRoutins[index].difficultyLevel,
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              const SizedBox(height: 24),
+            ],
+          ),
         ),
       ),
     );

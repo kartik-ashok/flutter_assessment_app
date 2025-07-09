@@ -17,11 +17,23 @@ class AddAssessmentCardstofirestore {
 
   Future<List<Map<String, dynamic>>> fetchAssessmentCards() async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
-    final QuerySnapshot snapshot =
-        await firestore.collection('assessmentCards').get();
+    final QuerySnapshot snapshot = await firestore
+        .collection('assessmentCards')
+        .get(const GetOptions(source: Source.server));
 
     return snapshot.docs
         .map((doc) => doc.data() as Map<String, dynamic>)
         .toList();
+  }
+
+  Future<void> cacheAssessmentCards() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('assessmentCards')
+        .get(const GetOptions(source: Source.cache)); // Fetch and cache
+
+    // Optional: Access docs
+    for (var doc in snapshot.docs) {
+      print(doc.data());
+    }
   }
 }
