@@ -21,7 +21,14 @@ class _MyAppointmentState extends State<MyAppointment> {
     super.initState();
     Provider.of<AssessmentCardProvider>(context, listen: false)
         .fetchAppointmentCards();
+    Provider.of<AssessmentCardProvider>(context, listen: false)
+        .fetchWorkoutRoutines();
   }
+
+  List<String> routineImags = [
+    ImagePaths.squats,
+    ImagePaths.halfSquats,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -161,22 +168,78 @@ class _MyAppointmentState extends State<MyAppointment> {
             },
           ),
 
+          // SizedBox(
+          //   height: 200,
+          //   child: ListView.builder(
+          //     scrollDirection: Axis.horizontal,
+          //     itemCount: 10,
+          //     itemBuilder: (context, index) {
+          //       return Container(
+          //         width: 280,
+          //         margin: const EdgeInsets.only(right: 12),
+          //         child: workoutCard(
+          //           imageUrl: ImagePaths.squats,
+          //           title: 'Sweat Starter',
+          //           subtitle: 'Full Body',
+          //           tagText: 'Lose Weight',
+          //           tagColor: const Color(0xff71aadf),
+          //           difficulty: 'Medium',
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // ),
           SizedBox(
-            height: 200,
+            height: ResponsiveSize.height(200),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 10,
+              itemCount: provider.workoutRoutins.length,
               itemBuilder: (context, index) {
+                if (provider.isLoading) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(20),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.primaryBlue,
+                      ),
+                    ),
+                  );
+                }
+                if (provider.workoutRoutins.isEmpty) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        children: [
+                          const Text(
+                            'No assessments found',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          ElevatedButton(
+                            onPressed: () {},
+                            child: const Text('Add Sample Cards'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
                 return Container(
                   width: 280,
                   margin: const EdgeInsets.only(right: 12),
                   child: workoutCard(
-                    imageUrl: ImagePaths.squats,
-                    title: 'Sweat Starter',
-                    subtitle: 'Full Body',
-                    tagText: 'Lose Weight',
+                    imageUrl: routineImags[index % routineImags.length],
+                    title: provider.workoutRoutins[index].name,
+                    subtitle: provider.workoutRoutins[index].bodyType,
+                    tagText: provider.workoutRoutins[index].weightGoal,
                     tagColor: const Color(0xff71aadf),
-                    difficulty: 'Medium',
+                    difficulty: provider.workoutRoutins[index].difficultyLevel,
                   ),
                 );
               },

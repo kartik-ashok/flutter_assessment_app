@@ -377,16 +377,19 @@ class _MyAssessmentState extends State<MyAssessment> {
                       )),
                   SizedBox(height: ResponsiveSize.height(4)),
                   Container(
+                    width: ResponsiveSize.width(70),
                     padding:
                         const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(16),
                       border:
                           Border.all(color: AppColors.primaryGrey, width: 1),
                     ),
-                    child: Text(tagText,
-                        style: AppTextStyles.size10w500Blue
-                            .copyWith(color: AppColors.primaryBlue)),
+                    child: Center(
+                      child: Text(tagText,
+                          style: AppTextStyles.size10w500Blue
+                              .copyWith(color: AppColors.primaryBlue)),
+                    ),
                   ),
                   SizedBox(height: ResponsiveSize.height(4)),
                   Row(
@@ -400,6 +403,7 @@ class _MyAssessmentState extends State<MyAssessment> {
                       ),
                       Text(
                         '$difficulty',
+                        overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.poppins(
                             fontWeight: FontWeight.w600,
                             fontSize: 12,
@@ -420,7 +424,14 @@ class _MyAssessmentState extends State<MyAssessment> {
   void initState() {
     super.initState();
     Provider.of<AssessmentCardProvider>(context, listen: false).fetchCards();
+    Provider.of<AssessmentCardProvider>(context, listen: false)
+        .fetchWorkoutRoutines();
   }
+
+  List<String> routineImags = [
+    ImagePaths.squats,
+    ImagePaths.halfSquats,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -560,18 +571,54 @@ class _MyAssessmentState extends State<MyAssessment> {
               height: ResponsiveSize.height(200),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: 10,
+                itemCount: provider.workoutRoutins.length,
                 itemBuilder: (context, index) {
+                  if (provider.isLoading) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(20),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.primaryBlue,
+                        ),
+                      ),
+                    );
+                  }
+                  if (provider.workoutRoutins.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          children: [
+                            const Text(
+                              'No assessments found',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            ElevatedButton(
+                              onPressed: () {},
+                              child: const Text('Add Sample Cards'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
                   return Container(
                     width: 280,
                     margin: const EdgeInsets.only(right: 12),
                     child: workoutCard(
-                      imageUrl: ImagePaths.squats,
-                      title: 'Sweat Starter',
-                      subtitle: 'Full Body',
-                      tagText: 'Lose Weight',
+                      imageUrl: routineImags[index % routineImags.length],
+                      title: provider.workoutRoutins[index].name,
+                      subtitle: provider.workoutRoutins[index].bodyType,
+                      tagText: provider.workoutRoutins[index].weightGoal,
                       tagColor: const Color(0xff71aadf),
-                      difficulty: 'Medium',
+                      difficulty:
+                          provider.workoutRoutins[index].difficultyLevel,
                     ),
                   );
                 },

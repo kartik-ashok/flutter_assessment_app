@@ -138,110 +138,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    'Current Password',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: currentPasswordController,
-                    obscureText: _isObscure,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _isObscure ? Icons.visibility_off : Icons.visibility,
-                        ),
-                        onPressed: _togglePasswordVisibility,
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: _logout,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryBlue,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
                       ),
-                      hintText: 'Enter current password',
-                      border: const OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Current password required';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'New Password',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: newPasswordController,
-                    obscureText: _isObscure,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.lock),
-                      hintText: 'Enter new password',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.length < 6) {
-                        return 'Password must be at least 6 characters';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Confirm New Password',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: confirmPasswordController,
-                    obscureText: _isObscure,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.lock),
-                      hintText: 'Re-enter new password',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value != newPasswordController.text) {
-                        return 'Passwords do not match';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 30),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: _logout,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primaryBlue,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                          ),
-                          child: Text(
-                            'Logout',
-                            style: AppTextStyles.size14w600Red
-                                .copyWith(color: AppColors.white),
-                          ),
-                        ),
+                      child: Text(
+                        'Logout',
+                        style: AppTextStyles.size14w600Red
+                            .copyWith(color: AppColors.white),
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: _updateProfile,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primaryBlue,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                          ),
-                          child: Text(
-                            'Update',
-                            style: AppTextStyles.size14w600Red
-                                .copyWith(color: AppColors.white),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
+                    ),
+                  ),
                 ],
               ),
             ),
