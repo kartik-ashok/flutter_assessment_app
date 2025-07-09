@@ -3,9 +3,8 @@ import 'package:flutter_assessment_app/assets/app_colors.dart';
 import 'package:flutter_assessment_app/assets/apptext_styles.dart';
 import 'package:flutter_assessment_app/assets/image_paths.dart';
 import 'package:flutter_assessment_app/domain/repository/auth_service.dart';
-import 'package:flutter_assessment_app/localStorage/app_prefrence.dart';
 import 'package:flutter_assessment_app/presentation/screens/my_dashboard.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_assessment_app/utils/responsive_utils.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -34,8 +33,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildLanguageSelector() {
     return Container(
-      width: 81,
-      height: 34,
+      width: ResponsiveSize.width(83),
+      height: ResponsiveSize.height(34),
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
           border: Border.all(color: Colors.black54),
@@ -43,14 +42,12 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Image.asset('assets/images/197374 1.png', width: 18, height: 18),
+          Image.asset(ImagePaths.flag,
+              width: ResponsiveSize.width(18),
+              height: ResponsiveSize.height(18)),
           Text(
             'Eng',
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
-              color: AppColors.secondaryGrey,
-            ),
+            style: AppTextStyles.size14w500Blue,
           ),
           const Icon(Icons.keyboard_arrow_down, size: 18),
         ],
@@ -60,8 +57,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildEmailInput() {
     return SizedBox(
-      width: 301,
-      height: 52,
+      width: ResponsiveSize.width(302),
+      height: ResponsiveSize.height(52),
       child: TextFormField(
         controller: _emailController,
         keyboardType: TextInputType.emailAddress,
@@ -89,7 +86,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
           filled: true,
           fillColor: Colors.white,
-          errorStyle: TextStyle(height: 0.5), // make error text take less space
+          errorStyle: TextStyle(
+              height: ResponsiveSize.height(
+                  0.5)), // make error text take less space
           // helperText: ' ', // keep vertical space always
         ),
         validator: (value) {
@@ -101,16 +100,13 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
- 
-
   Widget _buildPasswordInput() {
     return SizedBox(
-      width: 301,
-      height: 52,
+      width: ResponsiveSize.width(302),
+      height: ResponsiveSize.height(52),
       child: ValueListenableBuilder(
         valueListenable: _isObscure,
         builder: (context, isObscure, child) => TextFormField(
-        
           controller: _passwordController,
           obscureText: isObscure,
           style: AppTextStyles.size14w400Grey,
@@ -145,8 +141,9 @@ class _LoginScreenState extends State<LoginScreen> {
             filled: true,
             fillColor: Colors.grey.shade100,
             // 👇 Reserve space for error text to avoid shifting
-            errorStyle:
-                TextStyle(height: 0.5), // make error text take less space
+            errorStyle: TextStyle(
+                height: ResponsiveSize.height(
+                    0.5)), // make error text take less space
             // helperText: ' ', // keep vertical space always
           ),
           validator: (value) {
@@ -162,8 +159,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildContinueButton(BuildContext context) {
     return SizedBox(
-      height: 57,
-      width: 190,
+      height: ResponsiveSize.height(57),
+      width: ResponsiveSize.width(190),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
@@ -177,14 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text(
-              'Continue',
-              style: GoogleFonts.poppins(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: AppColors.white,
-              ),
-            ),
+            Text('Continue', style: AppTextStyles.size16wboldBlack),
             const Icon(
               Icons.arrow_forward,
               size: 20,
@@ -299,7 +289,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
-                      const SizedBox(height: 48),
+                      SizedBox(height: ResponsiveSize.height(48)),
                       Align(
                         alignment: Alignment.topRight,
                         child: Padding(
@@ -307,7 +297,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: _buildLanguageSelector(),
                         ),
                       ),
-                      const SizedBox(height: 141),
+                      SizedBox(height: ResponsiveSize.height(141)),
                       Center(
                         child: Form(
                           key: _formKey,
@@ -316,22 +306,22 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Image.asset(
                                 'assets/images/allyCare.png',
-                                width: 202,
-                                height: 66,
+                                width: ResponsiveSize.width(202),
+                                height: ResponsiveSize.height(66),
                               ),
-                              const SizedBox(height: 40),
+                              SizedBox(height: ResponsiveSize.height(40)),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 32),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: ResponsiveSize.width(32)),
                                 child: _buildEmailInput(),
                               ),
-                              const SizedBox(height: 20),
+                              SizedBox(height: ResponsiveSize.height(20)),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 32),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: ResponsiveSize.width(32)),
                                 child: _buildPasswordInput(),
                               ),
-                              const SizedBox(height: 26),
+                              SizedBox(height: ResponsiveSize.height(26)),
                               _buildContinueButton(context),
                               TextButton(
                                 onPressed: () {

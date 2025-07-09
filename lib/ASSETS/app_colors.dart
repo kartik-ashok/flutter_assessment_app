@@ -14,7 +14,7 @@ class AppColors {
   static const Color lightGreen = Color(0xFFA8E6CF);
   static const Color darkGreen = Color(0xFF388E3C);
   static const Color emeraldGreen = Color(0xff2B7A71);
-  static const Color limeGreen = Color(0xFFCDDC39);
+  static const Color limeGreen = Color(0xFFC1EAD1);
 
   static const LinearGradient greenGradientOne = LinearGradient(
     colors: [Color(0xff91B655), Color(0xff69F5BB)],
@@ -39,4 +39,6 @@ class AppColors {
 
   // Error Colors
   static const Color errorRed = Color(0xFFD32F2F);
+
+  static const Color primarypink = Color(0xffFF88A5);
 }

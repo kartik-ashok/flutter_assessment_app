@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_assessment_app/ASSETS/app_colors.dart';
 import 'package:flutter_assessment_app/assets/apptext_styles.dart';
 import 'package:flutter_assessment_app/assets/image_paths.dart';
+import 'package:flutter_assessment_app/utils/responsive_utils.dart';
 
 class HealthRiskAssessment extends StatelessWidget {
   final String imageUrl;
@@ -84,8 +85,8 @@ class HealthRiskAssessment extends StatelessWidget {
                       ImagePaths.sitRelax,
                       fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) => Container(
-                        width: 100,
-                        height: 100,
+                        width: ResponsiveSize.width(100),
+                        height: ResponsiveSize.height(100),
                         color: Colors.grey.shade300,
                         child: const Center(
                           child: Text('Image\nUnavailable',
@@ -116,7 +117,7 @@ class HealthRiskAssessment extends StatelessWidget {
                       Text('What do you get ?',
                           style: AppTextStyles.size24w600Blue
                               .copyWith(fontSize: 15)),
-                      const SizedBox(height: 12),
+                      SizedBox(height: ResponsiveSize.height(12)),
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -138,17 +139,18 @@ class HealthRiskAssessment extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: ResponsiveSize.height(12)),
                       Text('How we do it?',
                           style: AppTextStyles.size24w600Blue
                               .copyWith(fontSize: 15)),
-                      const SizedBox(height: 16),
+                      SizedBox(height: ResponsiveSize.height(12)),
                       Center(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(16),
                           child: // Parent container (main container)
                               SizedBox(
-                            height: 180, // height of the card
+                            height: ResponsiveSize.height(
+                                180), // height of the card
                             child: Stack(
                               clipBehavior:
                                   Clip.none, // Allows child to overflow
@@ -157,7 +159,7 @@ class HealthRiskAssessment extends StatelessWidget {
                                 // 1. Exercise image - background
                                 Container(
                                   width: double.infinity,
-                                  height: 180,
+                                  height: ResponsiveSize.height(180),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(16),
                                     image: DecorationImage(
@@ -171,7 +173,7 @@ class HealthRiskAssessment extends StatelessWidget {
                                 // 2. Optional transparent overlay
                                 Container(
                                   width: double.infinity,
-                                  height: 180,
+                                  height: ResponsiveSize.height(180),
                                   decoration: BoxDecoration(
                                     color: Colors.transparent,
                                     borderRadius: BorderRadius.circular(16),
@@ -248,7 +250,7 @@ class HealthRiskAssessment extends StatelessWidget {
                           // ),
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: ResponsiveSize.height(24)),
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
@@ -258,8 +260,10 @@ class HealthRiskAssessment extends StatelessWidget {
                         child: Row(
                           children: [
                             Image.asset(
-                                width: 13, height: 15, ImagePaths.ic_security),
-                            SizedBox(width: 10),
+                                width: ResponsiveSize.width(13),
+                                height: ResponsiveSize.height(15),
+                                ImagePaths.ic_security),
+                            SizedBox(width: ResponsiveSize.width(10)),
                             Flexible(
                               child: Text(
                                 'We do not store or share your personal data',
@@ -273,7 +277,7 @@ class HealthRiskAssessment extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: ResponsiveSize.height(16)),
                       const InstructionList(
                         instructions: [
                           "Ensure that you are in a well-lit space",
@@ -308,8 +312,8 @@ class IconLabelCard extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: 64,
-            height: 64,
+            width: ResponsiveSize.width(64),
+            height: ResponsiveSize.height(64),
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
@@ -325,7 +329,7 @@ class IconLabelCard extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: ResponsiveSize.height(8)),
           Text(
             label,
             textAlign: TextAlign.center,
