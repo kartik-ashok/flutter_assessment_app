@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_assessment_app/common/greeting_header.dart';
 import 'package:flutter_assessment_app/domain/repository/assessment_cardstofirestore.dart';
-import 'package:flutter_assessment_app/domain/repository/workout_routins.dart';
 import 'package:flutter_assessment_app/presentation/screens/my_appointment.dart';
 import 'package:flutter_assessment_app/presentation/screens/my_assessment.dart';
 import 'package:flutter_assessment_app/provider/provider.dart';
@@ -20,7 +19,6 @@ class _MyAssessmentsState extends State<MyDashboard>
   late TabController _tabController;
   AddAssessmentCardstofirestore addAssessmentCardstofirestore =
       AddAssessmentCardstofirestore();
-  WorkoutRoutins workoutRoutins = WorkoutRoutins();
 
   final double cardRadius = ResponsiveSize.width(12);
 
@@ -106,36 +104,6 @@ class _MyAssessmentsState extends State<MyDashboard>
             ],
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          try {
-            await workoutRoutins.addWorkoutRoutinsToFirestore();
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Workout routines added to Firestore!'),
-                  backgroundColor: Colors.green,
-                ),
-              );
-              // Refresh data after adding
-              final provider =
-                  Provider.of<AssessmentCardProvider>(context, listen: false);
-              provider.refreshAllData();
-            }
-          } catch (e) {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Error adding workout routines: $e'),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-          }
-        },
-        tooltip: 'Add Workout Routines',
-        child: const Icon(Icons.fitness_center),
       ),
     );
   }

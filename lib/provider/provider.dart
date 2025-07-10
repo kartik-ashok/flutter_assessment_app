@@ -36,47 +36,32 @@ class AssessmentCardProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      QuerySnapshot snapshot;
-
-      // Always try cache first (offline-first approach)
-      try {
-        snapshot = await FirebaseFirestore.instance
-            .collection('assessmentCards')
-            .get(const GetOptions(source: Source.cache));
-        _isUsingCachedData = true;
-
-        // Show offline message when using cached data
-        if (_cards.isEmpty || forceRefresh) {
-          _bookingMessage =
-              'Showing offline data. Pull to refresh to reload cached data.';
-        }
-      } catch (e) {
-        // If cache fails and we're forcing refresh, try server as fallback
-        if (forceRefresh) {
-          try {
-            snapshot = await FirebaseFirestore.instance
-                .collection('assessmentCards')
-                .get(const GetOptions(source: Source.server));
-            _isUsingCachedData = false;
-            _bookingMessage = null; // Clear offline message if server works
-          } catch (serverError) {
-            // Server also failed, show error message
-            _bookingMessage = 'No internet connection. Unable to load data.';
-            return;
-          }
-        } else {
-          // Not forcing refresh and cache failed, show error
-          _bookingMessage =
-              'No cached data available. Check internet connection.';
-          return;
-        }
-      }
+      // Try server first for latest data
+      QuerySnapshot snapshot =
+          await FirebaseFirestore.instance.collection('assessmentCards').get();
 
       _cards = snapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         data['id'] = doc.id; // Add document ID to the data
         return AssessmentCardModel.fromMap(data);
       }).toList();
+
+      // If no data exists, add sample data
+      if (_cards.isEmpty) {
+        await _addSampleAssessmentCards();
+        // Fetch again
+        snapshot = await FirebaseFirestore.instance
+            .collection('assessmentCards')
+            .get();
+        _cards = snapshot.docs.map((doc) {
+          Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+          data['id'] = doc.id;
+          return AssessmentCardModel.fromMap(data);
+        }).toList();
+      }
+
+      _isUsingCachedData = false;
+      _bookingMessage = null;
     } catch (e) {
       print('Error fetching cards: $e');
       _bookingMessage = 'Error loading data. Please try again.';
@@ -86,41 +71,73 @@ class AssessmentCardProvider with ChangeNotifier {
     }
   }
 
+  // Add sample assessment cards
+  Future<void> _addSampleAssessmentCards() async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    final List<Map<String, dynamic>> assessmentCards = [
+      {
+        'imageUrl':
+            'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5dbb5706-a698-444c-8024-414e2908e507.png',
+        'title': 'Health Risk Assessment',
+        'description':
+            'Identify And Mitigate Health Risks With Precise, Proactive Assessments',
+      },
+      {
+        'imageUrl':
+            'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5dbb5706-a698-444c-8024-414e2908e507.png',
+        'title': 'Mental Health Screening',
+        'description':
+            'Comprehensive mental wellness evaluation and stress assessment',
+      },
+      {
+        'imageUrl':
+            'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5dbb5706-a698-444c-8024-414e2908e507.png',
+        'title': 'Fitness Assessment',
+        'description':
+            'Evaluate your physical fitness level and create personalized workout plans',
+      },
+      {
+        'imageUrl':
+            'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5dbb5706-a698-444c-8024-414e2908e507.png',
+        'title': 'Nutrition Analysis',
+        'description':
+            'Analyze your dietary habits and get personalized nutrition recommendations',
+      },
+    ];
+
+    for (var card in assessmentCards) {
+      await firestore.collection('assessmentCards').add(card);
+    }
+  }
+
   Future<void> fetchAppointmentCards({bool forceRefresh = false}) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      QuerySnapshot snapshot;
-
-      // Always try cache first (offline-first approach)
-      try {
-        snapshot = await FirebaseFirestore.instance
-            .collection('healthServices')
-            .get(const GetOptions(source: Source.cache));
-        _isUsingCachedData = true;
-      } catch (e) {
-        // If cache fails and we're forcing refresh, try server as fallback
-        if (forceRefresh) {
-          try {
-            snapshot = await FirebaseFirestore.instance
-                .collection('healthServices')
-                .get(const GetOptions(source: Source.server));
-            _isUsingCachedData = false;
-          } catch (serverError) {
-            // Server also failed, keep existing data
-            return;
-          }
-        } else {
-          // Not forcing refresh and cache failed, keep existing data
-          return;
-        }
-      }
+      // Try to fetch from server first
+      QuerySnapshot snapshot =
+          await FirebaseFirestore.instance.collection('healthServices').get();
 
       _appointmentCards = snapshot.docs
           .map((doc) => AppointmentModel.fromMap(
               doc.data() as Map<String, dynamic>, doc.id))
           .toList();
+
+      // If no data exists, add sample data
+      if (_appointmentCards.isEmpty) {
+        await _addSampleAppointments();
+        // Fetch again
+        snapshot =
+            await FirebaseFirestore.instance.collection('healthServices').get();
+        _appointmentCards = snapshot.docs
+            .map((doc) => AppointmentModel.fromMap(
+                doc.data() as Map<String, dynamic>, doc.id))
+            .toList();
+      }
+
+      _isUsingCachedData = false;
     } catch (e) {
       print('Error fetching appointment cards: $e');
       // If all fails and we have no data, keep existing data
@@ -130,47 +147,179 @@ class AssessmentCardProvider with ChangeNotifier {
     }
   }
 
+  // Add sample appointments
+  Future<void> _addSampleAppointments() async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    final List<Map<String, dynamic>> appointments = [
+      {
+        'name': 'Cancer 2nd Opinion',
+        'type': 'Consultation',
+        'doctorName': 'Dr. Asha Mehta',
+        'doctorSpeciality': 'Oncologist',
+        'date': '2025-07-15',
+        'time': '10:30 AM',
+        'duration': '30 mins',
+        'location': 'Online',
+        'isBooked': false,
+        'price': 1200,
+        'description':
+            'Get a second opinion from an expert oncologist for cancer diagnosis and treatment options.',
+        'imageUrl':
+            'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5dbb5706-a698-444c-8024-414e2908e507.png',
+      },
+      {
+        'name': 'Heart Health Checkup',
+        'type': 'Screening',
+        'doctorName': 'Dr. Rajesh Kumar',
+        'doctorSpeciality': 'Cardiologist',
+        'date': '2025-07-16',
+        'time': '2:00 PM',
+        'duration': '45 mins',
+        'location': 'In-clinic',
+        'isBooked': false,
+        'price': 800,
+        'description':
+            'Comprehensive heart health screening including ECG and blood pressure monitoring.',
+        'imageUrl':
+            'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5dbb5706-a698-444c-8024-414e2908e507.png',
+      },
+      {
+        'name': 'Mental Health Consultation',
+        'type': 'Therapy',
+        'doctorName': 'Dr. Priya Sharma',
+        'doctorSpeciality': 'Psychiatrist',
+        'date': '2025-07-17',
+        'time': '11:00 AM',
+        'duration': '60 mins',
+        'location': 'Online',
+        'isBooked': false,
+        'price': 1000,
+        'description':
+            'Professional mental health consultation and therapy session.',
+        'imageUrl':
+            'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5dbb5706-a698-444c-8024-414e2908e507.png',
+      },
+      {
+        'name': 'Diabetes Management',
+        'type': 'Follow-up',
+        'doctorName': 'Dr. Suresh Patel',
+        'doctorSpeciality': 'Endocrinologist',
+        'date': '2025-07-18',
+        'time': '9:30 AM',
+        'duration': '30 mins',
+        'location': 'In-clinic',
+        'isBooked': false,
+        'price': 600,
+        'description':
+            'Diabetes management consultation and medication review.',
+        'imageUrl':
+            'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5dbb5706-a698-444c-8024-414e2908e507.png',
+      },
+      {
+        'name': 'General Health Checkup',
+        'type': 'Screening',
+        'doctorName': 'Dr. Anita Singh',
+        'doctorSpeciality': 'General Physician',
+        'date': '2025-07-19',
+        'time': '4:00 PM',
+        'duration': '30 mins',
+        'location': 'In-clinic',
+        'isBooked': false,
+        'price': 500,
+        'description':
+            'Complete general health checkup with basic tests and consultation.',
+        'imageUrl':
+            'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5dbb5706-a698-444c-8024-414e2908e507.png',
+      },
+    ];
+
+    for (var appointment in appointments) {
+      await firestore.collection('healthServices').add(appointment);
+    }
+  }
+
   Future<void> fetchWorkoutRoutines({bool forceRefresh = false}) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      QuerySnapshot snapshot;
-
-      // Always try cache first (offline-first approach)
-      try {
-        snapshot = await FirebaseFirestore.instance
-            .collection('workoutRoutines')
-            .get(const GetOptions(source: Source.cache));
-        _isUsingCachedData = true;
-      } catch (e) {
-        // If cache fails and we're forcing refresh, try server as fallback
-        if (forceRefresh) {
-          try {
-            snapshot = await FirebaseFirestore.instance
-                .collection('workoutRoutines')
-                .get(const GetOptions(source: Source.server));
-            _isUsingCachedData = false;
-          } catch (serverError) {
-            // Server also failed, keep existing data
-            return;
-          }
-        } else {
-          // Not forcing refresh and cache failed, keep existing data
-          return;
-        }
-      }
+      // Try to fetch from server first
+      QuerySnapshot snapshot =
+          await FirebaseFirestore.instance.collection('workoutRoutines').get();
 
       _workoutRoutins = snapshot.docs
           .map((doc) =>
               WorkoutRoutine.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
+
+      // If no data exists, add sample data
+      if (_workoutRoutins.isEmpty) {
+        await _addSampleWorkoutRoutines();
+        // Fetch again
+        snapshot = await FirebaseFirestore.instance
+            .collection('workoutRoutines')
+            .get();
+        _workoutRoutins = snapshot.docs
+            .map((doc) =>
+                WorkoutRoutine.fromJson(doc.data() as Map<String, dynamic>))
+            .toList();
+      }
+
+      _isUsingCachedData = false;
     } catch (e) {
       print('Error fetching workout routines: $e');
       // If all fails and we have no data, keep existing data
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  // Add sample workout routines
+  Future<void> _addSampleWorkoutRoutines() async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    final List<Map<String, dynamic>> workoutRoutines = [
+      {
+        "name": "Full Body Burner",
+        "sweatStart": "5 min",
+        "bodyType": "Full Body",
+        "weightGoal": "Lose",
+        "difficultyLevel": "Medium",
+      },
+      {
+        "name": "Upper Body Blast",
+        "sweatStart": "3 min",
+        "bodyType": "Upper Body",
+        "weightGoal": "Gain",
+        "difficultyLevel": "Hard",
+      },
+      {
+        "name": "Core Crusher",
+        "sweatStart": "4 min",
+        "bodyType": "Core",
+        "weightGoal": "Tone",
+        "difficultyLevel": "Easy",
+      },
+      {
+        "name": "Leg Day Legends",
+        "sweatStart": "6 min",
+        "bodyType": "Lower Body",
+        "weightGoal": "Lose",
+        "difficultyLevel": "Hard",
+      },
+      {
+        "name": "Cardio Kickstart",
+        "sweatStart": "2 min",
+        "bodyType": "Full Body",
+        "weightGoal": "Lose",
+        "difficultyLevel": "Medium",
+      },
+    ];
+
+    for (var routine in workoutRoutines) {
+      await firestore.collection('workoutRoutines').add(routine);
     }
   }
 
