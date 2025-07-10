@@ -429,9 +429,11 @@ class _MyAssessmentState extends State<MyAssessment> {
   @override
   void initState() {
     super.initState();
-    Provider.of<AssessmentCardProvider>(context, listen: false).fetchCards();
-    Provider.of<AssessmentCardProvider>(context, listen: false)
-        .fetchWorkoutRoutines();
+    final provider =
+        Provider.of<AssessmentCardProvider>(context, listen: false);
+    provider.fetchCards();
+    provider.fetchAppointmentCards();
+    provider.fetchWorkoutRoutines();
   }
 
   List<String> routineImags = [
@@ -512,7 +514,8 @@ class _MyAssessmentState extends State<MyAssessment> {
                               Navigator.push(context, MaterialPageRoute(
                                 builder: (context) {
                                   return HealthRiskAssessment(
-                                    imageUrl: assessmentCards[index % 2],
+                                    imageUrl: assessmentCards[
+                                        index % assessmentCards.length],
                                     title: card.title,
                                     description: card.description,
                                   );
@@ -524,7 +527,8 @@ class _MyAssessmentState extends State<MyAssessment> {
                               imageUrl: card.imageUrl,
                               title: card.title,
                               description: card.description,
-                              appointment: provider.appointmentCard[index],
+                              appointment: provider.appointmentCard[
+                                  index % provider.appointmentCard.length],
                             ),
                           );
                         },
