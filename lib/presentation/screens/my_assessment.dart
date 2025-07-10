@@ -86,17 +86,20 @@ class _MyAssessmentState extends State<MyAssessment> {
                   ? AppColors.orangeGradientone
                   : AppColors.greenGradientTwo,
             ),
-            child: Image.asset(
-              assessmentCards[index % 2],
-              width: 99,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
-                width: ResponsiveSize.width(100),
-                height: ResponsiveSize.height(116),
-                color: Colors.grey[300],
-                alignment: Alignment.center,
-                child: const Icon(Icons.broken_image,
-                    color: Colors.grey, size: 40),
+            child: Hero(
+              tag: 'assessment_image_$title', // Unique tag for each card
+              child: Image.asset(
+                assessmentCards[index % 2],
+                width: 99,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  width: ResponsiveSize.width(100),
+                  height: ResponsiveSize.height(116),
+                  color: Colors.grey[300],
+                  alignment: Alignment.center,
+                  child: const Icon(Icons.broken_image,
+                      color: Colors.grey, size: 40),
+                ),
               ),
             ),
           ),
@@ -540,16 +543,32 @@ class _MyAssessmentState extends State<MyAssessment> {
 
                           return InkWell(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(
-                                builder: (context) {
-                                  return HealthRiskAssessment(
-                                    imageUrl: assessmentCards[
-                                        index % assessmentCards.length],
-                                    title: card.title,
-                                    description: card.description,
-                                  );
-                                },
-                              ));
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder:
+                                      (context, animation, secondaryAnimation) {
+                                    return HealthRiskAssessment(
+                                      imageUrl: assessmentCards[
+                                          index % assessmentCards.length],
+                                      title: card.title,
+                                      description: card.description,
+                                      heroTag:
+                                          'assessment_image_${card.title}', // Pass the hero tag
+                                    );
+                                  },
+                                  transitionDuration:
+                                      const Duration(milliseconds: 600),
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    // Fade transition to complement the Hero animation
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
                             },
                             child: assessmentCard(
                               index: index,

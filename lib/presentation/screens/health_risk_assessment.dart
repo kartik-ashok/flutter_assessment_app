@@ -8,12 +8,14 @@ class HealthRiskAssessment extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String description;
+  final String heroTag;
 
   const HealthRiskAssessment({
     Key? key,
     required this.imageUrl,
     required this.title,
     required this.description,
+    required this.heroTag,
   }) : super(key: key);
 
   @override
@@ -81,16 +83,19 @@ class HealthRiskAssessment extends StatelessWidget {
 
                   Expanded(
                     flex: 3, // Adjust for image size
-                    child: Image.asset(
-                      imageUrl,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        width: ResponsiveSize.width(100),
-                        height: ResponsiveSize.height(100),
-                        color: Colors.grey.shade300,
-                        child: const Center(
-                          child: Text('Image\nUnavailable',
-                              textAlign: TextAlign.center),
+                    child: Hero(
+                      tag: heroTag, // Use the same tag as the source image
+                      child: Image.asset(
+                        imageUrl,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          width: ResponsiveSize.width(100),
+                          height: ResponsiveSize.height(100),
+                          color: Colors.grey.shade300,
+                          child: const Center(
+                            child: Text('Image\nUnavailable',
+                                textAlign: TextAlign.center),
+                          ),
                         ),
                       ),
                     ),
@@ -169,7 +174,6 @@ class HealthRiskAssessment extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-
                                 // 2. Optional transparent overlay
                                 Container(
                                   width: double.infinity,
