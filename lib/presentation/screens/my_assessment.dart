@@ -21,7 +21,7 @@ class MyAssessment extends StatefulWidget {
 
 class _MyAssessmentState extends State<MyAssessment> {
   final double cardRadius = 12.0;
-  bool showAll = false;
+  // bool showAll = false;
 
   AddAssessmentCardstofirestore addAssessmentCardstofirestore =
       AddAssessmentCardstofirestore();
@@ -512,7 +512,7 @@ class _MyAssessmentState extends State<MyAssessment> {
                               Navigator.push(context, MaterialPageRoute(
                                 builder: (context) {
                                   return HealthRiskAssessment(
-                                    imageUrl: card.imageUrl,
+                                    imageUrl: assessmentCards[index % 2],
                                     title: card.title,
                                     description: card.description,
                                   );
@@ -535,7 +535,7 @@ class _MyAssessmentState extends State<MyAssessment> {
                         child: ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              showAll = !showAll;
+                              // showAll = !showAll;
                             });
                           },
                           style: ElevatedButton.styleFrom(

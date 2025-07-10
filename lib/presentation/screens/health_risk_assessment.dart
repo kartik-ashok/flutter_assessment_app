@@ -82,7 +82,7 @@ class HealthRiskAssessment extends StatelessWidget {
                   Expanded(
                     flex: 3, // Adjust for image size
                     child: Image.asset(
-                      ImagePaths.sitRelax,
+                      imageUrl,
                       fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) => Container(
                         width: ResponsiveSize.width(100),
@@ -179,75 +179,9 @@ class HealthRiskAssessment extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                 ),
-
-                                // 3. Ring image that overflows outside top-right
-                                // Positioned(
-                                //   top: -50, // moves it above the container
-                                //   right: -10, // moves it outside to the right
-                                //   child: Image.asset(
-                                //     ImagePaths.ring,
-                                //     fit: BoxFit.contain,
-                                //     errorBuilder:
-                                //         (context, error, stackTrace) =>
-                                //             Container(
-                                //       width: 80,
-                                //       height: 80,
-                                //       color: Colors.grey.shade300,
-                                //       child: const Center(
-                                //           child: Text('Ring\nUnavailable')),
-                                //     ),
-                                //   ),
-                                // ),
                               ],
                             ),
                           ),
-                          // child: Stack(
-                          //   alignment: Alignment.topRight,
-                          //   children: [
-                          //     Image.asset(
-                          //       ImagePaths.ring,
-                          //       width: double.infinity,
-                          //       height: 180,
-                          //       fit: BoxFit.cover,
-                          //       errorBuilder: (context, error, stackTrace) =>
-                          //           Container(
-                          //         width: double.infinity,
-                          //         height: 180,
-                          //         color: Colors.grey.shade300,
-                          //         child: const Center(
-                          //           child: Text('Image\nUnavailable',
-                          //               textAlign: TextAlign.center),
-                          //         ),
-                          //       ),
-                          //     ),
-                          //     Container(
-                          //       width: double.infinity,
-                          //       height: 180,
-                          //       decoration: BoxDecoration(
-                          //         color: Colors.transparent,
-                          //         borderRadius: BorderRadius.circular(
-                          //           16,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //     Image.asset(
-                          //       ImagePaths.exercise,
-                          //       width: double.infinity,
-                          //       height: 180,
-                          //       fit: BoxFit.cover,
-                          //       errorBuilder: (context, error, stackTrace) =>
-                          //           Container(
-                          //         width: double.infinity,
-                          //         height: 180,
-                          //         color: Colors.grey.shade300,
-                          //         child: const Center(
-                          //           child: Text('Image\nUnavailable',
-                          //               textAlign: TextAlign.center),
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ],
-                          // ),
                         ),
                       ),
                       SizedBox(height: ResponsiveSize.height(24)),
