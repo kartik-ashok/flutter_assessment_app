@@ -21,12 +21,14 @@ class _MyAppointmentState extends State<MyAppointment> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    Provider.of<AssessmentCardProvider>(context, listen: false)
-        .fetchAppointmentCards();
-    Provider.of<AssessmentCardProvider>(context, listen: false)
-        .fetchWorkoutRoutines();
+    // Use addPostFrameCallback to ensure fetch calls happen after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider =
+          Provider.of<AssessmentCardProvider>(context, listen: false);
+      provider.fetchAppointmentCards();
+      provider.fetchWorkoutRoutines();
+    });
   }
 
   List<String> routineImags = [
@@ -43,7 +45,6 @@ class _MyAppointmentState extends State<MyAppointment> {
       backgroundColor: Colors.white,
       color: AppColors.primaryBlue,
       onRefresh: () {
-        print("Hello");
         return appointmentService.cacheAppointmentCards();
       },
       child: SingleChildScrollView(

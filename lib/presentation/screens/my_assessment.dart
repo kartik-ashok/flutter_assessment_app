@@ -429,11 +429,14 @@ class _MyAssessmentState extends State<MyAssessment> {
   @override
   void initState() {
     super.initState();
-    final provider =
-        Provider.of<AssessmentCardProvider>(context, listen: false);
-    provider.fetchCards();
-    provider.fetchAppointmentCards();
-    provider.fetchWorkoutRoutines();
+    // Use addPostFrameCallback to ensure fetch calls happen after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider =
+          Provider.of<AssessmentCardProvider>(context, listen: false);
+      provider.fetchCards();
+      provider.fetchAppointmentCards();
+      provider.fetchWorkoutRoutines();
+    });
   }
 
   List<String> routineImags = [
@@ -509,6 +512,32 @@ class _MyAssessmentState extends State<MyAssessment> {
                         itemCount: provider.cards.length,
                         itemBuilder: (context, index) {
                           final card = provider.cards[index];
+
+                          // Safe access to appointment cards with fallback
+                          AppointmentModel appointment;
+                          if (provider.appointmentCard.isNotEmpty) {
+                            appointment = provider.appointmentCard[
+                                index % provider.appointmentCard.length];
+                          } else {
+                            // Fallback appointment when list is empty
+                            appointment = AppointmentModel(
+                              docId: 'default',
+                              id: 'default',
+                              name: 'Health Assessment',
+                              type: 'Consultation',
+                              doctorName: 'Dr. Smith',
+                              doctorSpeciality: 'General',
+                              date: '2025-07-12',
+                              time: '10:00 AM',
+                              duration: '30 mins',
+                              location: 'Online',
+                              isBooked: false,
+                              price: 0,
+                              description: 'General health assessment',
+                              imageUrl: '',
+                            );
+                          }
+
                           return InkWell(
                             onTap: () {
                               Navigator.push(context, MaterialPageRoute(
@@ -527,8 +556,7 @@ class _MyAssessmentState extends State<MyAssessment> {
                               imageUrl: card.imageUrl,
                               title: card.title,
                               description: card.description,
-                              appointment: provider.appointmentCard[
-                                  index % provider.appointmentCard.length],
+                              appointment: appointment,
                             ),
                           );
                         },
