@@ -123,11 +123,12 @@ class _AssessmentCardListState extends State<AssessmentCardList> {
                       Row(
                         children: [
                           bluePlayIcon(),
-                          const SizedBox(width: 8),
+                          SizedBox(width: ResponsiveSize.width(8)),
                           Text(
                             'Start',
                             style: AppTextStyles.size14w500Blue.copyWith(
-                                fontSize: 14, color: AppColors.primaryBlue),
+                                fontSize: ResponsiveSize.width(14),
+                                color: AppColors.primaryBlue),
                           )
                         ],
                       )

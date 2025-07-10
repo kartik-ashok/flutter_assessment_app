@@ -296,6 +296,8 @@ class AssessmentCardProvider with ChangeNotifier {
       _bookingMessage = 'Appointment booked successfully!';
       _bookingAppointments.remove(appointmentId);
       notifyListeners();
+
+      // Return the booked appointment for confirmation screen
       return true;
     } catch (e) {
       _bookingMessage = 'Failed to book appointment. Please try again.';
@@ -377,6 +379,17 @@ class AssessmentCardProvider with ChangeNotifier {
     } catch (e) {
       _bookingMessage = 'Failed to clear favorites. Please try again.';
       notifyListeners();
+    }
+  }
+
+  /// Get appointment by ID
+  AppointmentModel? getAppointmentById(String appointmentId) {
+    try {
+      return _appointmentCards.firstWhere(
+        (appointment) => appointment.id == appointmentId,
+      );
+    } catch (e) {
+      return null;
     }
   }
 }

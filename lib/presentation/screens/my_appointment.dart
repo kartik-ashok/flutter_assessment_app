@@ -3,6 +3,7 @@ import 'package:flutter_assessment_app/assets/app_colors.dart';
 import 'package:flutter_assessment_app/assets/apptext_styles.dart';
 import 'package:flutter_assessment_app/assets/image_paths.dart';
 import 'package:flutter_assessment_app/domain/repository/appointment_service.dart';
+import 'package:flutter_assessment_app/presentation/screens/enhanced_appointment_list.dart';
 import 'package:flutter_assessment_app/presentation/screens/list_of_appointments.dart';
 import 'package:flutter_assessment_app/provider/provider.dart';
 import 'package:flutter_assessment_app/utils/responsive_utils.dart';
@@ -144,9 +145,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                   Navigator.push(
                     context,
                     PageTransition(
-                      child: ListOfAppointments(
-                        appointments: provider.appointmentCard,
-                      ),
+                      child: const EnhancedAppointmentList(),
                       type: PageTransitionType.rightToLeft,
                       duration: const Duration(milliseconds: 300),
                     ),
