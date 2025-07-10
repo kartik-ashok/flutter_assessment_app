@@ -5,10 +5,12 @@ import 'package:flutter_assessment_app/assets/app_colors.dart';
 import 'package:flutter_assessment_app/assets/image_paths.dart';
 import 'package:flutter_assessment_app/domain/repository/assessment_cardstofirestore.dart';
 import 'package:flutter_assessment_app/model/healthcare_service.dart';
+import 'package:flutter_assessment_app/presentation/screens/assessmentcard_list%20.dart';
 import 'package:flutter_assessment_app/presentation/screens/health_risk_assessment.dart';
 import 'package:flutter_assessment_app/provider/provider.dart';
 import 'package:flutter_assessment_app/utils/responsive_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -576,7 +578,7 @@ class _MyAssessmentState extends State<MyAssessment> {
                       ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: provider.cards.length,
+                        itemCount: 2,
                         itemBuilder: (context, index) {
                           final card = provider.cards[index];
 
@@ -649,9 +651,19 @@ class _MyAssessmentState extends State<MyAssessment> {
                         alignment: Alignment.center,
                         child: ElevatedButton(
                           onPressed: () {
-                            setState(() {
-                              // showAll = !showAll;
-                            });
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                child: AssessmentCardList(
+                                  appointments: provider.cards,
+                                ),
+                                type: PageTransitionType.rightToLeft,
+                                duration: const Duration(milliseconds: 300),
+                              ),
+                            );
+                            // setState(() {
+                            //   // showAll = !showAll;
+                            // });
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xff2a70f4),
