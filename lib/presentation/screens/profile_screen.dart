@@ -5,8 +5,10 @@ import 'package:flutter_assessment_app/assets/apptext_styles.dart';
 import 'package:flutter_assessment_app/domain/repository/auth_service.dart';
 import 'package:flutter_assessment_app/localStorage/app_prefrence.dart';
 import 'package:flutter_assessment_app/presentation/screens/add_data_buttons.dart';
+import 'package:flutter_assessment_app/presentation/screens/favorites_screen.dart';
 import 'package:flutter_assessment_app/presentation/screens/login_page.dart';
 import 'package:flutter_assessment_app/utils/responsive_utils.dart';
+import 'package:page_transition/page_transition.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -149,6 +151,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         SizedBox(height: ResponsiveSize.height(24)),
+
+                        /// Favorites Button
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  child: const FavoritesScreen(),
+                                  type: PageTransitionType.rightToLeft,
+                                  duration: const Duration(milliseconds: 300),
+                                ),
+                              );
+                            },
+                            icon:
+                                const Icon(Icons.favorite, color: Colors.white),
+                            label: Text(
+                              'My Favorites',
+                              style: AppTextStyles.size14w500Blue
+                                  .copyWith(color: Colors.white),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: ResponsiveSize.height(14)),
+                              backgroundColor: Colors.red,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    ResponsiveSize.width(12)),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: ResponsiveSize.height(16)),
 
                         /// Logout Button
                         SizedBox(

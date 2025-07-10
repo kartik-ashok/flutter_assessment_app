@@ -57,7 +57,9 @@ class _MyAssessmentState extends State<MyAssessment> {
     required String title,
     required String description,
     required AppointmentModel appointment,
-
+    required String assessmentId,
+    required VoidCallback onFavoriteToggle,
+    required bool isFavorite,
     // VoidCallback? onTap,
   }) {
     return Container(
@@ -73,75 +75,106 @@ class _MyAssessmentState extends State<MyAssessment> {
           )
         ],
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Stack(
         children: [
-          // Left Image with rounded left corners
-          Container(
-            padding: EdgeInsets.all(ResponsiveSize.width(10)),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(cardRadius),
-                bottomLeft: Radius.circular(cardRadius),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Left Image with rounded left corners
+              Container(
+                padding: EdgeInsets.all(ResponsiveSize.width(10)),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(cardRadius),
+                    bottomLeft: Radius.circular(cardRadius),
+                  ),
+                  gradient: index % 2 == 0
+                      ? AppColors.orangeGradientone
+                      : AppColors.greenGradientTwo,
+                ),
+                child: Hero(
+                  tag: 'assessment_image_$title', // Unique tag for each card
+                  child: Image.asset(
+                    assessmentCards[index % 2],
+                    width: ResponsiveSize.width(99),
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      width: ResponsiveSize.width(100),
+                      height: ResponsiveSize.height(116),
+                      color: Colors.grey[300],
+                      alignment: Alignment.center,
+                      child: Icon(Icons.broken_image,
+                          color: Colors.grey, size: ResponsiveSize.width(40)),
+                    ),
+                  ),
+                ),
               ),
-              gradient: index % 2 == 0
-                  ? AppColors.orangeGradientone
-                  : AppColors.greenGradientTwo,
-            ),
-            child: Hero(
-              tag: 'assessment_image_$title', // Unique tag for each card
-              child: Image.asset(
-                assessmentCards[index % 2],
-                width: ResponsiveSize.width(99),
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  width: ResponsiveSize.width(100),
-                  height: ResponsiveSize.height(116),
-                  color: Colors.grey[300],
-                  alignment: Alignment.center,
-                  child: Icon(Icons.broken_image,
-                      color: Colors.grey, size: ResponsiveSize.width(40)),
+              // Text content and start play icon
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                      ResponsiveSize.width(14),
+                      ResponsiveSize.height(14),
+                      ResponsiveSize.width(14),
+                      ResponsiveSize.height(14)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title,
+                          style: AppTextStyles.size24w600Blue
+                              .copyWith(fontSize: ResponsiveSize.width(14))),
+                      SizedBox(height: ResponsiveSize.height(4)),
+                      Text(description,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: AppTextStyles.size10w400Grey
+                              .copyWith(fontWeight: FontWeight.w500)),
+                      SizedBox(height: ResponsiveSize.height(4)),
+                      Row(
+                        children: [
+                          bluePlayIcon(),
+                          SizedBox(width: ResponsiveSize.width(8)),
+                          Text(
+                            'Start',
+                            style: AppTextStyles.size14w500Blue.copyWith(
+                                fontSize: ResponsiveSize.width(14),
+                                color: AppColors.primaryBlue),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+          // Favorite button positioned in top-right corner
+          Positioned(
+            top: ResponsiveSize.height(8),
+            right: ResponsiveSize.width(8),
+            child: GestureDetector(
+              onTap: onFavoriteToggle,
+              child: Container(
+                padding: EdgeInsets.all(ResponsiveSize.width(6)),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.9),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: ResponsiveSize.width(4),
+                      offset: Offset(0, ResponsiveSize.height(2)),
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  isFavorite ? Icons.favorite : Icons.favorite_border,
+                  color: isFavorite ? Colors.red : Colors.grey,
+                  size: ResponsiveSize.width(20),
                 ),
               ),
             ),
           ),
-          // Text content and start play icon
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(
-                  ResponsiveSize.width(14),
-                  ResponsiveSize.height(14),
-                  ResponsiveSize.width(14),
-                  ResponsiveSize.height(14)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title,
-                      style: AppTextStyles.size24w600Blue
-                          .copyWith(fontSize: ResponsiveSize.width(14))),
-                  SizedBox(height: ResponsiveSize.height(4)),
-                  Text(description,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      style: AppTextStyles.size10w400Grey
-                          .copyWith(fontWeight: FontWeight.w500)),
-                  SizedBox(height: ResponsiveSize.height(4)),
-                  Row(
-                    children: [
-                      bluePlayIcon(),
-                      SizedBox(width: ResponsiveSize.width(8)),
-                      Text(
-                        'Start',
-                        style: AppTextStyles.size14w500Blue.copyWith(
-                            fontSize: ResponsiveSize.width(14),
-                            color: AppColors.primaryBlue),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-          )
         ],
       ),
     );
@@ -344,102 +377,103 @@ class _MyAssessmentState extends State<MyAssessment> {
   }
 
   // Workout routine card widget
- Widget workoutCard({
-  required String imageUrl,
-  required String title,
-  required String subtitle,
-  required String tagText,
-  required Color tagColor,
-  required String difficulty,
-}) {
-  return Container(
-    width: ResponsiveSize.width(250),
-    height: ResponsiveSize.height(112),
-    margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: AppColors.primaryGrey, width: 1),
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          width: ResponsiveSize.width(107),
-          height: double.maxFinite,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            gradient: AppColors.orangeGradientone,
-          ),
-          child: Image.asset(
-            imageUrl,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => Container(
-              width: ResponsiveSize.width(90),
-              height: ResponsiveSize.height(90),
-              color: Colors.grey[300],
-              alignment: Alignment.center,
-              child:
-                  const Icon(Icons.broken_image, color: Colors.grey, size: 40),
+  Widget workoutCard({
+    required String imageUrl,
+    required String title,
+    required String subtitle,
+    required String tagText,
+    required Color tagColor,
+    required String difficulty,
+  }) {
+    return Container(
+      width: ResponsiveSize.width(250),
+      height: ResponsiveSize.height(112),
+      margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.primaryGrey, width: 1),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: ResponsiveSize.width(107),
+            height: double.maxFinite,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              gradient: AppColors.orangeGradientone,
+            ),
+            child: Image.asset(
+              imageUrl,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                width: ResponsiveSize.width(90),
+                height: ResponsiveSize.height(90),
+                color: Colors.grey[300],
+                alignment: Alignment.center,
+                child: const Icon(Icons.broken_image,
+                    color: Colors.grey, size: 40),
+              ),
             ),
           ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: AppTextStyles.size14w500Blue
-                      .copyWith(color: AppColors.black),
-                ),
-                SizedBox(height: ResponsiveSize.height(4)),
-                Text(subtitle,
-                    style: AppTextStyles.size10w500Blue.copyWith(
-                      color: AppColors.black,
-                      fontWeight: FontWeight.w400,
-                    )),
-                SizedBox(height: ResponsiveSize.height(4)),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: AppColors.primaryGrey, width: 1),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: AppTextStyles.size14w500Blue
+                        .copyWith(color: AppColors.black),
                   ),
-                  child: Text(tagText,
-                      style: AppTextStyles.size10w500Blue
-                          .copyWith(color: AppColors.primaryBlue)),
-                ),
-                SizedBox(height: ResponsiveSize.height(4)),
-                Row(
-                  children: [
-                    Text(
-                      'Difficulty :',
-                      style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                          color: AppColors.secondaryGrey),
+                  SizedBox(height: ResponsiveSize.height(4)),
+                  Text(subtitle,
+                      style: AppTextStyles.size10w500Blue.copyWith(
+                        color: AppColors.black,
+                        fontWeight: FontWeight.w400,
+                      )),
+                  SizedBox(height: ResponsiveSize.height(4)),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      border:
+                          Border.all(color: AppColors.primaryGrey, width: 1),
                     ),
-                    Text(
-                      '$difficulty',
-                      style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                          color: AppColors.primarypink),
-                    ),
-                  ],
-                )
-              ],
+                    child: Text(tagText,
+                        style: AppTextStyles.size10w500Blue
+                            .copyWith(color: AppColors.primaryBlue)),
+                  ),
+                  SizedBox(height: ResponsiveSize.height(4)),
+                  Row(
+                    children: [
+                      Text(
+                        'Difficulty :',
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                            color: AppColors.secondaryGrey),
+                      ),
+                      Text(
+                        '$difficulty',
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                            color: AppColors.primarypink),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
-          ),
-        )
-      ],
-    ),
-  );
-}
+          )
+        ],
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -657,6 +691,11 @@ class _MyAssessmentState extends State<MyAssessment> {
                               title: card.title,
                               description: card.description,
                               appointment: appointment,
+                              assessmentId: card.id,
+                              isFavorite: provider.isFavorite(card.id),
+                              onFavoriteToggle: () {
+                                provider.toggleFavorite(card);
+                              },
                             ),
                           );
                         },

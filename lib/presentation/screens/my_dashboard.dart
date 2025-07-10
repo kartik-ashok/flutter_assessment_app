@@ -26,6 +26,13 @@ class _MyAssessmentsState extends State<MyDashboard>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+
+    // Initialize provider with favorites
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider =
+          Provider.of<AssessmentCardProvider>(context, listen: false);
+      provider.initializeProvider();
+    });
   }
 
   @override

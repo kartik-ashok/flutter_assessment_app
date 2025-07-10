@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_assessment_app/localStorage/favorite_service.dart';
 import 'package:flutter_assessment_app/model/Assessment_card_model.dart';
 import 'package:flutter_assessment_app/model/healthcare_service.dart';
 import 'package:flutter_assessment_app/model/workout_routins.dart';
@@ -15,6 +16,7 @@ class AssessmentCardProvider with ChangeNotifier {
       {}; // Track which appointments are being booked
   String? _bookingMessage;
   bool _isUsingCachedData = false;
+  Set<String> _favoriteAssessments = {}; // Track favorite assessment IDs
 
   List<AssessmentCardModel> get cards => _cards;
   List<AppointmentModel> get appointmentCard => _appointmentCards;
@@ -22,6 +24,7 @@ class AssessmentCardProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get bookingMessage => _bookingMessage;
   bool get isUsingCachedData => _isUsingCachedData;
+  Set<String> get favoriteAssessments => _favoriteAssessments;
 
   // Check if a specific appointment is being booked
   bool isBookingAppointment(String appointmentId) {
@@ -69,10 +72,11 @@ class AssessmentCardProvider with ChangeNotifier {
         }
       }
 
-      _cards = snapshot.docs
-          .map((doc) =>
-              AssessmentCardModel.fromMap(doc.data() as Map<String, dynamic>))
-          .toList();
+      _cards = snapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        data['id'] = doc.id; // Add document ID to the data
+        return AssessmentCardModel.fromMap(data);
+      }).toList();
     } catch (e) {
       print('Error fetching cards: $e');
       _bookingMessage = 'Error loading data. Please try again.';
@@ -186,7 +190,13 @@ class AssessmentCardProvider with ChangeNotifier {
       fetchCards(forceRefresh: false),
       fetchAppointmentCards(forceRefresh: false),
       fetchWorkoutRoutines(forceRefresh: false),
+      loadFavorites(), // Load favorites from SharedPreferences
     ]);
+  }
+
+  // Initialize provider with all data
+  Future<void> initializeProvider() async {
+    await loadCachedData();
   }
 
   // Clear booking message
@@ -292,6 +302,81 @@ class AssessmentCardProvider with ChangeNotifier {
       _bookingAppointments.remove(appointmentId);
       notifyListeners();
       return false;
+    }
+  }
+
+  // Favorite-related methods
+
+  /// Load favorites from SharedPreferences
+  Future<void> loadFavorites() async {
+    try {
+      List<AssessmentCardModel> favorites =
+          await FavoriteService.getFavorites();
+      _favoriteAssessments =
+          favorites.map((assessment) => assessment.id).toSet();
+      notifyListeners();
+    } catch (e) {
+      print('Error loading favorites: $e');
+    }
+  }
+
+  /// Check if an assessment is favorite
+  bool isFavorite(String assessmentId) {
+    return _favoriteAssessments.contains(assessmentId);
+  }
+
+  /// Toggle favorite status for an assessment
+  Future<void> toggleFavorite(AssessmentCardModel assessment) async {
+    try {
+      bool newFavoriteStatus = await FavoriteService.toggleFavorite(assessment);
+
+      if (newFavoriteStatus) {
+        _favoriteAssessments.add(assessment.id);
+        _bookingMessage = '${assessment.title} added to favorites!';
+      } else {
+        _favoriteAssessments.remove(assessment.id);
+        _bookingMessage = '${assessment.title} removed from favorites!';
+      }
+
+      notifyListeners();
+
+      // Clear message after 3 seconds
+      Future.delayed(const Duration(seconds: 3), () {
+        _bookingMessage = null;
+        notifyListeners();
+      });
+    } catch (e) {
+      _bookingMessage = 'Failed to update favorites. Please try again.';
+      notifyListeners();
+    }
+  }
+
+  /// Get all favorite assessments
+  Future<List<AssessmentCardModel>> getFavoriteAssessments() async {
+    try {
+      return await FavoriteService.getFavorites();
+    } catch (e) {
+      print('Error getting favorite assessments: $e');
+      return [];
+    }
+  }
+
+  /// Clear all favorites
+  Future<void> clearAllFavorites() async {
+    try {
+      await FavoriteService.clearAllFavorites();
+      _favoriteAssessments.clear();
+      _bookingMessage = 'All favorites cleared!';
+      notifyListeners();
+
+      // Clear message after 3 seconds
+      Future.delayed(const Duration(seconds: 3), () {
+        _bookingMessage = null;
+        notifyListeners();
+      });
+    } catch (e) {
+      _bookingMessage = 'Failed to clear favorites. Please try again.';
+      notifyListeners();
     }
   }
 }
