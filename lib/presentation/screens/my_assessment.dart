@@ -436,9 +436,8 @@ class _MyAssessmentState extends State<MyAssessment> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider =
           Provider.of<AssessmentCardProvider>(context, listen: false);
-      provider.fetchCards();
-      provider.fetchAppointmentCards();
-      provider.fetchWorkoutRoutines();
+      // Load cached data first for offline support
+      provider.loadCachedData();
     });
   }
 
@@ -455,14 +454,79 @@ class _MyAssessmentState extends State<MyAssessment> {
       body: RefreshIndicator(
         backgroundColor: Colors.white,
         color: AppColors.primaryBlue,
-        onRefresh: () {
-          return addAssessmentCardstofirestore.cacheAssessmentCards();
+        onRefresh: () async {
+          final provider =
+              Provider.of<AssessmentCardProvider>(context, listen: false);
+          await provider.refreshAllData();
         },
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Show offline/booking message if available
+              if (provider.bookingMessage != null)
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: provider.bookingMessage!.contains('successfully')
+                        ? Colors.green[100]
+                        : provider.bookingMessage!.contains('offline')
+                            ? Colors.orange[100]
+                            : Colors.red[100],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: provider.bookingMessage!.contains('successfully')
+                          ? Colors.green
+                          : provider.bookingMessage!.contains('offline')
+                              ? Colors.orange
+                              : Colors.red,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        provider.bookingMessage!.contains('successfully')
+                            ? Icons.check_circle
+                            : provider.bookingMessage!.contains('offline')
+                                ? Icons.wifi_off
+                                : Icons.error,
+                        color: provider.bookingMessage!.contains('successfully')
+                            ? Colors.green
+                            : provider.bookingMessage!.contains('offline')
+                                ? Colors.orange
+                                : Colors.red,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          provider.bookingMessage!,
+                          style: TextStyle(
+                            color: provider.bookingMessage!
+                                    .contains('successfully')
+                                ? Colors.green[800]
+                                : provider.bookingMessage!.contains('offline')
+                                    ? Colors.orange[800]
+                                    : Colors.red[800],
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => provider.clearBookingMessage(),
+                        iconSize: 16,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
+                    ],
+                  ),
+                ),
+
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(

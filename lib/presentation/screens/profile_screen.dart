@@ -93,70 +93,173 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.primaryBlue,
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(
-            builder: (context) {
-              return AddDataButtons();
-            },
-          ));
-        },
-        child: const Icon(
-          Icons.add,
-          color: AppColors.white,
-        ),
-      ),
+      backgroundColor: AppColors.white, // Optional soft background
       appBar: AppBar(
         title: const Text('Profile'),
         centerTitle: true,
+        backgroundColor: AppColors.primaryBlue,
+        elevation: 2,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Card(
-          elevation: 5,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Form(
-              key: _formKey,
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  const Text(
-                    'Email',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: emailController,
-                    readOnly: true,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.email),
-                      border: OutlineInputBorder(),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Account Info',
+                          style: AppTextStyles.size10w400Grey,
+                        ),
+                        const SizedBox(height: 16),
+
+                        /// Email Field
+                        Text(
+                          'Email',
+                          style: AppTextStyles.size10w500white.copyWith(
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        TextFormField(
+                          controller: emailController,
+                          readOnly: true,
+                          style: AppTextStyles.size10w500Blue,
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.email),
+                            filled: true,
+                            fillColor: Colors.grey[100],
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        /// Logout Button
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            onPressed: _logout,
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              backgroundColor: AppColors.primaryBlue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            icon: const Icon(Icons.logout,
+                                color: AppColors.white),
+                            label: Text(
+                              'Logout',
+                              style: AppTextStyles.size14w600Red.copyWith(
+                                color: AppColors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _logout,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryBlue,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                    ),
-                    child: Text(
-                      'Logout',
-                      style: AppTextStyles.size14w600Red
-                          .copyWith(color: AppColors.white),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.primaryBlue,
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddDataButtons(),
+              ));
+        },
+        child: const Icon(Icons.add, color: AppColors.white),
+      ),
     );
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     floatingActionButton: FloatingActionButton(
+  //       backgroundColor: AppColors.primaryBlue,
+  //       onPressed: () {
+  //         Navigator.push(context, MaterialPageRoute(
+  //           builder: (context) {
+  //             return AddDataButtons();
+  //           },
+  //         ));
+  //       },
+  //       child: const Icon(
+  //         Icons.add,
+  //         color: AppColors.white,
+  //       ),
+  //     ),
+  //     appBar: AppBar(
+  //       title: const Text('Profile'),
+  //       centerTitle: true,
+  //     ),
+  //     body: Padding(
+  //       padding: const EdgeInsets.all(16.0),
+  //       child: Card(
+  //         elevation: 5,
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+  //         child: Padding(
+  //           padding: const EdgeInsets.all(20.0),
+  //           child: Form(
+  //             key: _formKey,
+  //             child: ListView(
+  //               shrinkWrap: true,
+  //               children: [
+  //                 const Text(
+  //                   'Email',
+  //                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  //                 ),
+  //                 const SizedBox(height: 6),
+  //                 TextFormField(
+  //                   controller: emailController,
+  //                   readOnly: true,
+  //                   decoration: const InputDecoration(
+  //                     prefixIcon: Icon(Icons.email),
+  //                     border: OutlineInputBorder(),
+  //                   ),
+  //                 ),
+  //                 const SizedBox(height: 20),
+  //                 ElevatedButton(
+  //                   onPressed: _logout,
+  //                   style: ElevatedButton.styleFrom(
+  //                     backgroundColor: AppColors.primaryBlue,
+  //                     shape: RoundedRectangleBorder(
+  //                         borderRadius: BorderRadius.circular(12)),
+  //                   ),
+  //                   child: Text(
+  //                     'Logout',
+  //                     style: AppTextStyles.size14w600Red
+  //                         .copyWith(color: AppColors.white),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 }

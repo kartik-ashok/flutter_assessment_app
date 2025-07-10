@@ -14,73 +14,179 @@ class AssessmentCardProvider with ChangeNotifier {
   Set<String> _bookingAppointments =
       {}; // Track which appointments are being booked
   String? _bookingMessage;
+  bool _isUsingCachedData = false;
 
   List<AssessmentCardModel> get cards => _cards;
   List<AppointmentModel> get appointmentCard => _appointmentCards;
   List<WorkoutRoutine> get workoutRoutins => _workoutRoutins;
   bool get isLoading => _isLoading;
   String? get bookingMessage => _bookingMessage;
+  bool get isUsingCachedData => _isUsingCachedData;
 
   // Check if a specific appointment is being booked
   bool isBookingAppointment(String appointmentId) {
     return _bookingAppointments.contains(appointmentId);
   }
 
-  Future<void> fetchCards() async {
+  Future<void> fetchCards({bool forceRefresh = false}) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      final snapshot =
-          await FirebaseFirestore.instance.collection('assessmentCards').get();
+      QuerySnapshot snapshot;
+
+      // Always try cache first (offline-first approach)
+      try {
+        snapshot = await FirebaseFirestore.instance
+            .collection('assessmentCards')
+            .get(const GetOptions(source: Source.cache));
+        _isUsingCachedData = true;
+
+        // Show offline message when using cached data
+        if (_cards.isEmpty || forceRefresh) {
+          _bookingMessage =
+              'Showing offline data. Pull to refresh to reload cached data.';
+        }
+      } catch (e) {
+        // If cache fails and we're forcing refresh, try server as fallback
+        if (forceRefresh) {
+          try {
+            snapshot = await FirebaseFirestore.instance
+                .collection('assessmentCards')
+                .get(const GetOptions(source: Source.server));
+            _isUsingCachedData = false;
+            _bookingMessage = null; // Clear offline message if server works
+          } catch (serverError) {
+            // Server also failed, show error message
+            _bookingMessage = 'No internet connection. Unable to load data.';
+            return;
+          }
+        } else {
+          // Not forcing refresh and cache failed, show error
+          _bookingMessage =
+              'No cached data available. Check internet connection.';
+          return;
+        }
+      }
 
       _cards = snapshot.docs
-          .map((doc) => AssessmentCardModel.fromMap(doc.data()))
+          .map((doc) =>
+              AssessmentCardModel.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
       print('Error fetching cards: $e');
+      _bookingMessage = 'Error loading data. Please try again.';
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
 
-  Future<void> fetchAppointmentCards() async {
+  Future<void> fetchAppointmentCards({bool forceRefresh = false}) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      final snapshot =
-          await FirebaseFirestore.instance.collection('healthServices').get();
+      QuerySnapshot snapshot;
+
+      // Always try cache first (offline-first approach)
+      try {
+        snapshot = await FirebaseFirestore.instance
+            .collection('healthServices')
+            .get(const GetOptions(source: Source.cache));
+        _isUsingCachedData = true;
+      } catch (e) {
+        // If cache fails and we're forcing refresh, try server as fallback
+        if (forceRefresh) {
+          try {
+            snapshot = await FirebaseFirestore.instance
+                .collection('healthServices')
+                .get(const GetOptions(source: Source.server));
+            _isUsingCachedData = false;
+          } catch (serverError) {
+            // Server also failed, keep existing data
+            return;
+          }
+        } else {
+          // Not forcing refresh and cache failed, keep existing data
+          return;
+        }
+      }
 
       _appointmentCards = snapshot.docs
-          .map((doc) => AppointmentModel.fromMap(doc.data(), doc.id))
+          .map((doc) => AppointmentModel.fromMap(
+              doc.data() as Map<String, dynamic>, doc.id))
           .toList();
     } catch (e) {
-      print('Error fetching cards: $e');
+      print('Error fetching appointment cards: $e');
+      // If all fails and we have no data, keep existing data
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
 
-  Future<void> fetchWorkoutRoutines() async {
+  Future<void> fetchWorkoutRoutines({bool forceRefresh = false}) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      final snapshot =
-          await FirebaseFirestore.instance.collection('workoutRoutines').get();
+      QuerySnapshot snapshot;
+
+      // Always try cache first (offline-first approach)
+      try {
+        snapshot = await FirebaseFirestore.instance
+            .collection('workoutRoutines')
+            .get(const GetOptions(source: Source.cache));
+        _isUsingCachedData = true;
+      } catch (e) {
+        // If cache fails and we're forcing refresh, try server as fallback
+        if (forceRefresh) {
+          try {
+            snapshot = await FirebaseFirestore.instance
+                .collection('workoutRoutines')
+                .get(const GetOptions(source: Source.server));
+            _isUsingCachedData = false;
+          } catch (serverError) {
+            // Server also failed, keep existing data
+            return;
+          }
+        } else {
+          // Not forcing refresh and cache failed, keep existing data
+          return;
+        }
+      }
 
       _workoutRoutins = snapshot.docs
-          .map((doc) => WorkoutRoutine.fromJson(doc.data()))
+          .map((doc) =>
+              WorkoutRoutine.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      print('Error fetching cards: $e');
+      print('Error fetching workout routines: $e');
+      // If all fails and we have no data, keep existing data
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  // Refresh cached data (for pull-to-refresh) - prioritizes offline data
+  Future<void> refreshAllData() async {
+    _bookingMessage = null; // Clear any previous messages
+    await Future.wait([
+      fetchCards(forceRefresh: true),
+      fetchAppointmentCards(forceRefresh: true),
+      fetchWorkoutRoutines(forceRefresh: true),
+    ]);
+  }
+
+  // Load cached data first (for offline support)
+  Future<void> loadCachedData() async {
+    await Future.wait([
+      fetchCards(forceRefresh: false),
+      fetchAppointmentCards(forceRefresh: false),
+      fetchWorkoutRoutines(forceRefresh: false),
+    ]);
   }
 
   // Clear booking message

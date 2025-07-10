@@ -26,8 +26,8 @@ class _MyAppointmentState extends State<MyAppointment> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider =
           Provider.of<AssessmentCardProvider>(context, listen: false);
-      provider.fetchAppointmentCards();
-      provider.fetchWorkoutRoutines();
+      // Load cached data first for offline support
+      provider.loadCachedData();
     });
   }
 
@@ -44,8 +44,10 @@ class _MyAppointmentState extends State<MyAppointment> {
     return RefreshIndicator(
       backgroundColor: Colors.white,
       color: AppColors.primaryBlue,
-      onRefresh: () {
-        return appointmentService.cacheAppointmentCards();
+      onRefresh: () async {
+        final provider =
+            Provider.of<AssessmentCardProvider>(context, listen: false);
+        await provider.refreshAllData();
       },
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
