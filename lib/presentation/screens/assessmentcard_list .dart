@@ -102,13 +102,17 @@ class _AssessmentCardListState extends State<AssessmentCardList> {
               // Text content and start play icon
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+                  padding: EdgeInsets.fromLTRB(
+                      ResponsiveSize.width(14),
+                      ResponsiveSize.height(14),
+                      ResponsiveSize.width(14),
+                      ResponsiveSize.height(14)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(title,
                           style: AppTextStyles.size24w600Blue
-                              .copyWith(fontSize: 14)),
+                              .copyWith(fontSize: ResponsiveSize.width(14))),
                       SizedBox(height: ResponsiveSize.height(4)),
                       Text(description,
                           overflow: TextOverflow.ellipsis,
