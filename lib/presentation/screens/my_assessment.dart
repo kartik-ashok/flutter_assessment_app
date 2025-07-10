@@ -767,64 +767,83 @@ class _MyAssessmentState extends State<MyAssessment> {
 
               SizedBox(
                 height: ResponsiveSize.height(200),
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: provider.workoutRoutins.length,
-                  itemBuilder: (context, index) {
-                    if (provider.isLoading) {
-                      return Shimmer.fromColors(
-                        baseColor: Colors.grey.shade300,
-                        highlightColor: Colors.grey.shade100,
-                        child: Container(
-                          width: ResponsiveSize.width(280),
-                          margin:
-                              EdgeInsets.only(right: ResponsiveSize.width(12)),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.circular(ResponsiveSize.width(12)),
-                          ),
-                        ),
-                      );
-                    }
-                    if (provider.workoutRoutins.isEmpty) {
-                      return Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(ResponsiveSize.width(20)),
-                          child: Column(
-                            children: [
-                              Text(
-                                'No workout routines found',
-                                style: TextStyle(
-                                  fontSize: ResponsiveSize.width(16),
-                                  color: Colors.grey,
+                child: provider.isLoading
+                    ? ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 3, // Show 3 shimmer items while loading
+                        itemBuilder: (context, index) {
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: Container(
+                              width: ResponsiveSize.width(280),
+                              margin: EdgeInsets.only(
+                                  right: ResponsiveSize.width(12)),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(
+                                    ResponsiveSize.width(12)),
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : provider.workoutRoutins.isEmpty
+                        ? Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(ResponsiveSize.width(20)),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.fitness_center,
+                                    size: ResponsiveSize.width(48),
+                                    color: Colors.grey,
+                                  ),
+                                  SizedBox(height: ResponsiveSize.height(12)),
+                                  Text(
+                                    'No workout routines found',
+                                    style: TextStyle(
+                                      fontSize: ResponsiveSize.width(16),
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  SizedBox(height: ResponsiveSize.height(8)),
+                                  Text(
+                                    'Use the + button in dashboard to add routines',
+                                    style: TextStyle(
+                                      fontSize: ResponsiveSize.width(12),
+                                      color: Colors.grey[600],
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: provider.workoutRoutins.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin: EdgeInsets.only(
+                                    right: ResponsiveSize.width(12)),
+                                child: workoutCard(
+                                  imageUrl:
+                                      routineImags[index % routineImags.length],
+                                  title: provider.workoutRoutins[index].name,
+                                  subtitle:
+                                      provider.workoutRoutins[index].bodyType,
+                                  tagText:
+                                      provider.workoutRoutins[index].weightGoal,
+                                  tagColor: const Color(0xff71aadf),
+                                  difficulty: provider
+                                      .workoutRoutins[index].difficultyLevel,
                                 ),
-                              ),
-                              SizedBox(height: ResponsiveSize.height(12)),
-                              ElevatedButton(
-                                onPressed: () {},
-                                child: const Text('Add Sample Routines'),
-                              ),
-                            ],
+                              );
+                            },
                           ),
-                        ),
-                      );
-                    }
-
-                    return Container(
-                      margin: EdgeInsets.only(right: ResponsiveSize.width(12)),
-                      child: workoutCard(
-                        imageUrl: routineImags[index % routineImags.length],
-                        title: provider.workoutRoutins[index].name,
-                        subtitle: provider.workoutRoutins[index].bodyType,
-                        tagText: provider.workoutRoutins[index].weightGoal,
-                        tagColor: const Color(0xff71aadf),
-                        difficulty:
-                            provider.workoutRoutins[index].difficultyLevel,
-                      ),
-                    );
-                  },
-                ),
               ),
 
               const SizedBox(height: 24),
