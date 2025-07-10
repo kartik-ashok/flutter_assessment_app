@@ -50,7 +50,7 @@ class _MyAppointmentState extends State<MyAppointment> {
         await provider.refreshAllData();
       },
       child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(ResponsiveSize.width(16)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -59,28 +59,29 @@ class _MyAppointmentState extends State<MyAppointment> {
                 baseColor: Colors.grey.shade300,
                 highlightColor: Colors.grey.shade100,
                 child: Container(
-                  height: 280,
-                  margin: const EdgeInsets.only(right: 12),
+                  height: ResponsiveSize.height(280),
+                  margin: EdgeInsets.only(right: ResponsiveSize.width(12)),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius:
+                        BorderRadius.circular(ResponsiveSize.width(12)),
                   ),
                 ),
               ),
             ] else if (provider.cards.isEmpty) ...[
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: EdgeInsets.all(ResponsiveSize.width(20)),
                   child: Column(
                     children: [
-                      const Text(
+                      Text(
                         'No assessments found',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: ResponsiveSize.width(16),
                           color: Colors.grey,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: ResponsiveSize.height(12)),
                       ElevatedButton(
                         onPressed: () {},
                         child: const Text('Add Sample Cards'),
@@ -93,10 +94,10 @@ class _MyAppointmentState extends State<MyAppointment> {
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 10.0,
-                  mainAxisSpacing: 10.0,
+                  crossAxisSpacing: ResponsiveSize.width(10),
+                  mainAxisSpacing: ResponsiveSize.height(10),
                   childAspectRatio: 3 / 2,
                 ),
                 itemCount: provider.appointmentCard.length <= 3
@@ -131,14 +132,14 @@ class _MyAppointmentState extends State<MyAppointment> {
                 },
               ),
             ],
-            const SizedBox(height: 16),
+            SizedBox(height: ResponsiveSize.height(16)),
 
             // View All Button
             Align(
               alignment: Alignment.center,
               child: ElevatedButton(
                 onPressed: () {
-                  // use pageTransion
+                  // use pageTransition
 
                   Navigator.push(
                     context,
@@ -153,38 +154,40 @@ class _MyAppointmentState extends State<MyAppointment> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xff2a70f4),
-                  minimumSize: const Size(90, 28),
+                  minimumSize:
+                      Size(ResponsiveSize.width(90), ResponsiveSize.height(28)),
                   padding: EdgeInsets.zero,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius:
+                        BorderRadius.circular(ResponsiveSize.width(20)),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   'View all',
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
-                    fontSize: 12,
+                    fontSize: ResponsiveSize.width(12),
                     color: Colors.white,
                   ),
                 ),
               ),
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: ResponsiveSize.height(24)),
 
             // Challenges Section
-            const Text(
+            Text(
               'Challenges',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: ResponsiveSize.width(18),
                 fontWeight: FontWeight.w700,
                 color: Colors.black87,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: ResponsiveSize.height(12)),
             challengeCard(),
 
-            const SizedBox(height: 24),
+            SizedBox(height: ResponsiveSize.height(24)),
 
             sectionHeader(
               title: 'Workout Routines',
@@ -202,11 +205,13 @@ class _MyAppointmentState extends State<MyAppointment> {
                       baseColor: Colors.grey.shade300,
                       highlightColor: Colors.grey.shade100,
                       child: Container(
-                        width: 280,
-                        margin: const EdgeInsets.only(right: 12),
+                        width: ResponsiveSize.width(280),
+                        margin:
+                            EdgeInsets.only(right: ResponsiveSize.width(12)),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius:
+                              BorderRadius.circular(ResponsiveSize.width(12)),
                         ),
                       ),
                     );
@@ -214,20 +219,20 @@ class _MyAppointmentState extends State<MyAppointment> {
                   if (provider.workoutRoutins.isEmpty) {
                     return Center(
                       child: Padding(
-                        padding: const EdgeInsets.all(20),
+                        padding: EdgeInsets.all(ResponsiveSize.width(20)),
                         child: Column(
                           children: [
-                            const Text(
-                              'No assessments found',
+                            Text(
+                              'No workout routines found',
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: ResponsiveSize.width(16),
                                 color: Colors.grey,
                               ),
                             ),
-                            const SizedBox(height: 12),
+                            SizedBox(height: ResponsiveSize.height(12)),
                             ElevatedButton(
                               onPressed: () {},
-                              child: const Text('Add Sample Cards'),
+                              child: const Text('Add Sample Routines'),
                             ),
                           ],
                         ),
@@ -236,7 +241,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                   }
 
                   return Container(
-                    margin: const EdgeInsets.only(right: 12),
+                    margin: EdgeInsets.only(right: ResponsiveSize.width(12)),
                     child: workoutCard(
                       imageUrl: routineImags[index % routineImags.length],
                       title: provider.workoutRoutins[index].name,
@@ -251,7 +256,7 @@ class _MyAppointmentState extends State<MyAppointment> {
               ),
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: ResponsiveSize.height(24)),
           ],
         ),
       ),

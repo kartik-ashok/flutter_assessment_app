@@ -37,10 +37,10 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildLanguageSelector() {
     return Container(
       width: ResponsiveSize.width(83),
-      padding: const EdgeInsets.all(6),
+      padding: EdgeInsets.all(ResponsiveSize.width(6)),
       decoration: BoxDecoration(
           border: Border.all(color: Colors.black54),
-          borderRadius: BorderRadius.circular(16)),
+          borderRadius: BorderRadius.circular(ResponsiveSize.width(16))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
             'Eng',
             style: AppTextStyles.size14w500Blue,
           ),
-          const Icon(Icons.keyboard_arrow_down, size: 18),
+          Icon(Icons.keyboard_arrow_down, size: ResponsiveSize.width(18)),
         ],
       ),
     );
@@ -68,23 +68,27 @@ class _LoginScreenState extends State<LoginScreen> {
         decoration: InputDecoration(
           hintText: 'Enter your email',
           prefixIcon: const Icon(Icons.email_outlined),
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+          contentPadding: EdgeInsets.symmetric(
+              vertical: ResponsiveSize.height(16),
+              horizontal: ResponsiveSize.width(8)),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(ResponsiveSize.width(16)),
             borderSide: const BorderSide(color: AppColors.tertiaryGrey),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: Colors.blue.shade700, width: 1),
+            borderRadius: BorderRadius.circular(ResponsiveSize.width(16)),
+            borderSide: BorderSide(
+                color: Colors.blue.shade700, width: ResponsiveSize.width(1)),
           ),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: Colors.grey.shade700, width: 1),
+            borderRadius: BorderRadius.circular(ResponsiveSize.width(16)),
+            borderSide: BorderSide(
+                color: Colors.grey.shade700, width: ResponsiveSize.width(1)),
           ),
           focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: Colors.grey.shade700, width: 1),
+            borderRadius: BorderRadius.circular(ResponsiveSize.width(16)),
+            borderSide: BorderSide(
+                color: Colors.grey.shade700, width: ResponsiveSize.width(1)),
           ),
 
           filled: true,
@@ -124,23 +128,27 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: _togglePasswordVisibility,
             ),
 
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+            contentPadding: EdgeInsets.symmetric(
+                vertical: ResponsiveSize.height(16),
+                horizontal: ResponsiveSize.width(8)),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(ResponsiveSize.width(16)),
               borderSide: BorderSide(color: Colors.grey.shade300),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: Colors.blue.shade700, width: 1),
+              borderRadius: BorderRadius.circular(ResponsiveSize.width(16)),
+              borderSide: BorderSide(
+                  color: Colors.blue.shade700, width: ResponsiveSize.width(1)),
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: Colors.grey.shade700, width: 1),
+              borderRadius: BorderRadius.circular(ResponsiveSize.width(16)),
+              borderSide: BorderSide(
+                  color: Colors.grey.shade700, width: ResponsiveSize.width(1)),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: Colors.grey.shade700, width: 1),
+              borderRadius: BorderRadius.circular(ResponsiveSize.width(16)),
+              borderSide: BorderSide(
+                  color: Colors.grey.shade700, width: ResponsiveSize.width(1)),
             ),
             filled: true,
             fillColor: Colors.grey.shade100,
@@ -168,11 +176,13 @@ class _LoginScreenState extends State<LoginScreen> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(28.5),
+            borderRadius: BorderRadius.circular(ResponsiveSize.width(28.5)),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 32),
+          padding: EdgeInsets.symmetric(
+              vertical: ResponsiveSize.height(14),
+              horizontal: ResponsiveSize.width(32)),
           backgroundColor: AppColors.primaryBlue,
-          elevation: 4,
+          elevation: ResponsiveSize.width(4),
         ),
         onPressed: () => _submit(context),
         child: Row(
@@ -184,9 +194,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   return Text(_isLoading ? 'Loading...' : 'Continue',
                       style: AppTextStyles.size16wboldBlack);
                 }),
-            const Icon(
+            Icon(
               Icons.arrow_forward,
-              size: 20,
+              size: ResponsiveSize.width(20),
               color: AppColors.white,
             ),
           ],
@@ -268,7 +278,7 @@ class _LoginScreenState extends State<LoginScreen> {
               alignment: Alignment.bottomCenter,
             ),
             Positioned(
-              bottom: 12,
+              bottom: ResponsiveSize.height(12),
               left: 0,
               right: 0,
               child: _buildSupport(),
@@ -291,7 +301,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 child: IntrinsicHeight(
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(ResponsiveSize.width(8)),
                     child: Column(
                       children: [
                         Align(

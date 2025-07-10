@@ -4,6 +4,7 @@ import 'package:flutter_assessment_app/assets/apptext_styles.dart';
 import 'package:flutter_assessment_app/domain/repository/appointment_service.dart';
 import 'package:flutter_assessment_app/model/healthcare_service.dart';
 import 'package:flutter_assessment_app/provider/provider.dart';
+import 'package:flutter_assessment_app/utils/responsive_utils.dart';
 import 'package:provider/provider.dart';
 
 class ListOfAppointments extends StatefulWidget {
@@ -40,13 +41,14 @@ class _ListOfAppointmentsState extends State<ListOfAppointments> {
               if (provider.bookingMessage != null)
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  margin: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(ResponsiveSize.width(16)),
+                  margin: EdgeInsets.all(ResponsiveSize.width(12)),
                   decoration: BoxDecoration(
                     color: provider.bookingMessage!.contains('successfully')
                         ? Colors.green[100]
                         : Colors.red[100],
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius:
+                        BorderRadius.circular(ResponsiveSize.width(8)),
                     border: Border.all(
                       color: provider.bookingMessage!.contains('successfully')
                           ? Colors.green
@@ -63,7 +65,7 @@ class _ListOfAppointmentsState extends State<ListOfAppointments> {
                             ? Colors.green
                             : Colors.red,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: ResponsiveSize.width(8)),
                       Expanded(
                         child: Text(
                           provider.bookingMessage!,
@@ -79,7 +81,7 @@ class _ListOfAppointmentsState extends State<ListOfAppointments> {
                       IconButton(
                         icon: const Icon(Icons.close),
                         onPressed: () => provider.clearBookingMessage(),
-                        iconSize: 20,
+                        iconSize: ResponsiveSize.width(20),
                       ),
                     ],
                   ),
@@ -88,23 +90,25 @@ class _ListOfAppointmentsState extends State<ListOfAppointments> {
               // Appointments list
               Expanded(
                 child: ListView.builder(
-                    padding: const EdgeInsets.all(12),
+                    padding: EdgeInsets.all(ResponsiveSize.width(12)),
                     itemCount: provider.appointmentCard.length,
                     itemBuilder: (context, index) {
                       final appointment = provider.appointmentCard[index];
                       final isBooked = appointment.isBooked;
 
                       return Container(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        padding: const EdgeInsets.all(16),
+                        margin:
+                            EdgeInsets.only(bottom: ResponsiveSize.height(12)),
+                        padding: EdgeInsets.all(ResponsiveSize.width(16)),
                         decoration: BoxDecoration(
                           color: isBooked ? Colors.grey[200] : Colors.white,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius:
+                              BorderRadius.circular(ResponsiveSize.width(12)),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.05),
-                              blurRadius: 5,
-                              offset: const Offset(0, 4),
+                              blurRadius: ResponsiveSize.width(5),
+                              offset: Offset(0, ResponsiveSize.height(4)),
                             ),
                           ],
                         ),
@@ -113,56 +117,62 @@ class _ListOfAppointmentsState extends State<ListOfAppointments> {
                           children: [
                             Text(
                               appointment.name,
-                              style: const TextStyle(
-                                fontSize: 18,
+                              style: TextStyle(
+                                fontSize: ResponsiveSize.width(18),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            SizedBox(height: ResponsiveSize.height(8)),
                             Row(
                               children: [
-                                const Icon(Icons.calendar_today, size: 16),
-                                const SizedBox(width: 6),
+                                Icon(Icons.calendar_today,
+                                    size: ResponsiveSize.width(16)),
+                                SizedBox(width: ResponsiveSize.width(6)),
                                 Text(appointment.date),
                               ],
                             ),
-                            const SizedBox(height: 6),
+                            SizedBox(height: ResponsiveSize.height(6)),
                             Row(
                               children: [
-                                const Icon(Icons.access_time, size: 16),
-                                const SizedBox(width: 6),
+                                Icon(Icons.access_time,
+                                    size: ResponsiveSize.width(16)),
+                                SizedBox(width: ResponsiveSize.width(6)),
                                 Text(appointment.time),
                               ],
                             ),
-                            const SizedBox(height: 6),
+                            SizedBox(height: ResponsiveSize.height(6)),
                             Row(
                               children: [
-                                const Icon(Icons.person, size: 16),
-                                const SizedBox(width: 6),
+                                Icon(Icons.person,
+                                    size: ResponsiveSize.width(16)),
+                                SizedBox(width: ResponsiveSize.width(6)),
                                 Text(appointment.doctorName),
                               ],
                             ),
-                            const SizedBox(height: 6),
+                            SizedBox(height: ResponsiveSize.height(6)),
                             Row(
                               children: [
-                                const Icon(Icons.location_on, size: 16),
-                                const SizedBox(width: 6),
+                                Icon(Icons.location_on,
+                                    size: ResponsiveSize.width(16)),
+                                SizedBox(width: ResponsiveSize.width(6)),
                                 Text(appointment.location),
                               ],
                             ),
-                            const SizedBox(height: 6),
+                            SizedBox(height: ResponsiveSize.height(6)),
                             Row(
                               children: [
-                                const Icon(Icons.monetization_on, size: 16),
-                                const SizedBox(width: 6),
+                                Icon(Icons.monetization_on,
+                                    size: ResponsiveSize.width(16)),
+                                SizedBox(width: ResponsiveSize.width(6)),
                                 Text('₹${appointment.price}'),
                               ],
                             ),
-                            const SizedBox(height: 6),
+                            SizedBox(height: ResponsiveSize.height(6)),
                             Row(
                               children: [
-                                const Icon(Icons.info_outline, size: 16),
-                                const SizedBox(width: 6),
+                                Icon(Icons.info_outline,
+                                    size: ResponsiveSize.width(16)),
+                                SizedBox(width: ResponsiveSize.width(6)),
                                 Text(
                                   isBooked ? 'Booked' : 'Available',
                                   style: TextStyle(
@@ -172,7 +182,7 @@ class _ListOfAppointmentsState extends State<ListOfAppointments> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 12),
+                            SizedBox(height: ResponsiveSize.height(12)),
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
@@ -197,22 +207,24 @@ class _ListOfAppointmentsState extends State<ListOfAppointments> {
                                 ),
                                 child: provider
                                         .isBookingAppointment(appointment.id)
-                                    ? const Row(
+                                    ? Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
                                           SizedBox(
-                                            width: 16,
-                                            height: 16,
+                                            width: ResponsiveSize.width(16),
+                                            height: ResponsiveSize.height(16),
                                             child: CircularProgressIndicator(
-                                              strokeWidth: 2,
+                                              strokeWidth:
+                                                  ResponsiveSize.width(2),
                                               valueColor:
-                                                  AlwaysStoppedAnimation<Color>(
-                                                      Colors.white),
+                                                  const AlwaysStoppedAnimation<
+                                                      Color>(Colors.white),
                                             ),
                                           ),
-                                          SizedBox(width: 8),
-                                          Text('Booking...'),
+                                          SizedBox(
+                                              width: ResponsiveSize.width(8)),
+                                          const Text('Booking...'),
                                         ],
                                       )
                                     : Text(isBooked

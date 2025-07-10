@@ -22,7 +22,7 @@ class MyAssessment extends StatefulWidget {
 }
 
 class _MyAssessmentState extends State<MyAssessment> {
-  final double cardRadius = 12.0;
+  final double cardRadius = ResponsiveSize.width(12);
   // bool showAll = false;
 
   AddAssessmentCardstofirestore addAssessmentCardstofirestore =
@@ -34,12 +34,12 @@ class _MyAssessmentState extends State<MyAssessment> {
         color: Color(0xff2a70f4),
         shape: BoxShape.circle,
       ),
-      child: const Padding(
-        padding: EdgeInsets.all(4.0),
+      child: Padding(
+        padding: EdgeInsets.all(ResponsiveSize.width(4)),
         child: Icon(
           Icons.play_arrow_rounded,
           color: Colors.white,
-          size: 18,
+          size: ResponsiveSize.width(18),
         ),
       ),
     );
@@ -61,15 +61,15 @@ class _MyAssessmentState extends State<MyAssessment> {
     // VoidCallback? onTap,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 14),
+      margin: EdgeInsets.only(bottom: ResponsiveSize.height(14)),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(cardRadius),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            color: Color(0xffeeeeee),
-            blurRadius: 6,
-            offset: Offset(0, 3),
+            color: const Color(0xffeeeeee),
+            blurRadius: ResponsiveSize.width(6),
+            offset: Offset(0, ResponsiveSize.height(3)),
           )
         ],
       ),
@@ -78,7 +78,7 @@ class _MyAssessmentState extends State<MyAssessment> {
         children: [
           // Left Image with rounded left corners
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(ResponsiveSize.width(10)),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(cardRadius),
@@ -92,15 +92,15 @@ class _MyAssessmentState extends State<MyAssessment> {
               tag: 'assessment_image_$title', // Unique tag for each card
               child: Image.asset(
                 assessmentCards[index % 2],
-                width: 99,
+                width: ResponsiveSize.width(99),
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Container(
                   width: ResponsiveSize.width(100),
                   height: ResponsiveSize.height(116),
                   color: Colors.grey[300],
                   alignment: Alignment.center,
-                  child: const Icon(Icons.broken_image,
-                      color: Colors.grey, size: 40),
+                  child: Icon(Icons.broken_image,
+                      color: Colors.grey, size: ResponsiveSize.width(40)),
                 ),
               ),
             ),
@@ -108,13 +108,17 @@ class _MyAssessmentState extends State<MyAssessment> {
           // Text content and start play icon
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+              padding: EdgeInsets.fromLTRB(
+                  ResponsiveSize.width(14),
+                  ResponsiveSize.height(14),
+                  ResponsiveSize.width(14),
+                  ResponsiveSize.height(14)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(title,
-                      style:
-                          AppTextStyles.size24w600Blue.copyWith(fontSize: 14)),
+                      style: AppTextStyles.size24w600Blue
+                          .copyWith(fontSize: ResponsiveSize.width(14))),
                   SizedBox(height: ResponsiveSize.height(4)),
                   Text(description,
                       overflow: TextOverflow.ellipsis,
@@ -125,11 +129,12 @@ class _MyAssessmentState extends State<MyAssessment> {
                   Row(
                     children: [
                       bluePlayIcon(),
-                      const SizedBox(width: 8),
+                      SizedBox(width: ResponsiveSize.width(8)),
                       Text(
                         'Start',
                         style: AppTextStyles.size14w500Blue.copyWith(
-                            fontSize: 14, color: AppColors.primaryBlue),
+                            fontSize: ResponsiveSize.width(14),
+                            color: AppColors.primaryBlue),
                       )
                     ],
                   )
@@ -145,35 +150,37 @@ class _MyAssessmentState extends State<MyAssessment> {
   Widget sectionHeader(
       {required String title, required VoidCallback onViewAll}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 2),
+      padding: EdgeInsets.symmetric(
+          vertical: ResponsiveSize.height(14),
+          horizontal: ResponsiveSize.width(2)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w700,
-              fontSize: 16,
+              fontSize: ResponsiveSize.width(16),
               color: Colors.black87,
             ),
           ),
           GestureDetector(
             onTap: onViewAll,
-            child: const Row(
+            child: Row(
               children: [
                 Text(
                   'View All',
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
-                    fontSize: 13,
-                    color: Color(0xff2a70f4),
+                    fontSize: ResponsiveSize.width(13),
+                    color: const Color(0xff2a70f4),
                   ),
                 ),
-                SizedBox(width: 4),
+                SizedBox(width: ResponsiveSize.width(4)),
                 Icon(
                   Icons.arrow_forward_ios_rounded,
-                  size: 14,
-                  color: Color(0xff2a70f4),
+                  size: ResponsiveSize.width(14),
+                  color: const Color(0xff2a70f4),
                 ),
               ],
             ),
@@ -188,10 +195,12 @@ class _MyAssessmentState extends State<MyAssessment> {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.limeGreen,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(ResponsiveSize.width(14)),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-      margin: const EdgeInsets.only(bottom: 14),
+      padding: EdgeInsets.symmetric(
+          horizontal: ResponsiveSize.width(8),
+          vertical: ResponsiveSize.height(16)),
+      margin: EdgeInsets.only(bottom: ResponsiveSize.height(14)),
       // height: 129,
       // padding: const EdgeInsets.all(16),
       child: Row(
@@ -206,11 +215,12 @@ class _MyAssessmentState extends State<MyAssessment> {
                     style: AppTextStyles.size12w500BemeraldGreen),
                 SizedBox(height: ResponsiveSize.height(8)),
                 Container(
-                  // height: 16,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 6, horizontal: 6),
+                  padding: EdgeInsets.symmetric(
+                      vertical: ResponsiveSize.height(6),
+                      horizontal: ResponsiveSize.width(6)),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius:
+                        BorderRadius.circular(ResponsiveSize.width(16)),
                     color: AppColors.emeraldGreen,
                   ),
                   child:
@@ -221,15 +231,16 @@ class _MyAssessmentState extends State<MyAssessment> {
                 Stack(
                   children: [
                     Container(
-                      height: 8,
+                      height: ResponsiveSize.height(8),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: const [
+                        borderRadius:
+                            BorderRadius.circular(ResponsiveSize.width(20)),
+                        boxShadow: [
                           BoxShadow(
-                            color: Color(0x44707070),
-                            blurRadius: 6,
-                            offset: Offset(0, 2),
+                            color: const Color(0x44707070),
+                            blurRadius: ResponsiveSize.width(6),
+                            offset: Offset(0, ResponsiveSize.height(2)),
                           )
                         ],
                       ),
@@ -242,7 +253,8 @@ class _MyAssessmentState extends State<MyAssessment> {
                         width: width,
                         decoration: BoxDecoration(
                           color: AppColors.primarypink,
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius:
+                              BorderRadius.circular(ResponsiveSize.width(20)),
                         ),
                       );
                     }),
@@ -254,23 +266,26 @@ class _MyAssessmentState extends State<MyAssessment> {
                     Text(
                       '10/20 ',
                       style: AppTextStyles.size14w700Black.copyWith(
-                        fontSize: 12,
+                        fontSize: ResponsiveSize.width(12),
                       ),
                     ),
                     Text(
                       'Complete',
                       style: AppTextStyles.size14w700Black.copyWith(
-                          fontSize: 12, color: AppColors.secondaryGrey),
+                          fontSize: ResponsiveSize.width(12),
+                          color: AppColors.secondaryGrey),
                     ),
                   ],
                 ),
                 SizedBox(height: ResponsiveSize.height(4)),
                 Container(
-                  width: 120,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+                  width: ResponsiveSize.width(120),
+                  padding: EdgeInsets.symmetric(
+                      vertical: ResponsiveSize.height(4),
+                      horizontal: ResponsiveSize.width(6)),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius:
+                        BorderRadius.circular(ResponsiveSize.width(12)),
                     color: AppColors.white,
                   ),
                   child: Row(
@@ -280,21 +295,21 @@ class _MyAssessmentState extends State<MyAssessment> {
                           color: AppColors.primaryBlue,
                           shape: BoxShape.circle,
                         ),
-                        child: const Padding(
-                          padding: EdgeInsets.all(4.0),
+                        child: Padding(
+                          padding: EdgeInsets.all(ResponsiveSize.width(4)),
                           child: Icon(
                             Icons.play_arrow_rounded,
                             color: Colors.white,
-                            size: 18,
+                            size: ResponsiveSize.width(18),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      const Text(
+                      SizedBox(width: ResponsiveSize.width(8)),
+                      Text(
                         'Continue',
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
-                          fontSize: 14,
+                          fontSize: ResponsiveSize.width(14),
                           color: AppColors.primaryBlue,
                         ),
                       )
@@ -308,7 +323,7 @@ class _MyAssessmentState extends State<MyAssessment> {
           Expanded(
             flex: 4,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(ResponsiveSize.width(16)),
               child: Image.asset(
                 ImagePaths.pushUp,
                 height: ResponsiveSize.height(80),
@@ -317,8 +332,8 @@ class _MyAssessmentState extends State<MyAssessment> {
                   height: ResponsiveSize.height(129),
                   color: Colors.grey[300],
                   alignment: Alignment.center,
-                  child: const Icon(Icons.broken_image,
-                      color: Colors.grey, size: 40),
+                  child: Icon(Icons.broken_image,
+                      color: Colors.grey, size: ResponsiveSize.width(40)),
                 ),
               ),
             ),
@@ -329,107 +344,102 @@ class _MyAssessmentState extends State<MyAssessment> {
   }
 
   // Workout routine card widget
-  Widget workoutCard({
-    required String imageUrl,
-    required String title,
-    required String subtitle,
-    required String tagText,
-    required Color tagColor,
-    required String difficulty,
-  }) {
-    return Container(
-      width: ResponsiveSize.width(250),
-      height: ResponsiveSize.height(112),
-      margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.primaryGrey, width: 1),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: ResponsiveSize.width(107),
-            height: double.maxFinite,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              gradient: AppColors.orangeGradientone,
-            ),
-            child: Image.asset(
-              imageUrl,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
-                width: ResponsiveSize.width(90),
-                height: ResponsiveSize.height(90),
-                color: Colors.grey[300],
-                alignment: Alignment.center,
-                child: const Icon(Icons.broken_image,
-                    color: Colors.grey, size: 40),
-              ),
+ Widget workoutCard({
+  required String imageUrl,
+  required String title,
+  required String subtitle,
+  required String tagText,
+  required Color tagColor,
+  required String difficulty,
+}) {
+  return Container(
+    width: ResponsiveSize.width(250),
+    height: ResponsiveSize.height(112),
+    margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(color: AppColors.primaryGrey, width: 1),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          width: ResponsiveSize.width(107),
+          height: double.maxFinite,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            gradient: AppColors.orangeGradientone,
+          ),
+          child: Image.asset(
+            imageUrl,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => Container(
+              width: ResponsiveSize.width(90),
+              height: ResponsiveSize.height(90),
+              color: Colors.grey[300],
+              alignment: Alignment.center,
+              child:
+                  const Icon(Icons.broken_image, color: Colors.grey, size: 40),
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: AppTextStyles.size14w500Blue
-                        .copyWith(color: AppColors.black),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: AppTextStyles.size14w500Blue
+                      .copyWith(color: AppColors.black),
+                ),
+                SizedBox(height: ResponsiveSize.height(4)),
+                Text(subtitle,
+                    style: AppTextStyles.size10w500Blue.copyWith(
+                      color: AppColors.black,
+                      fontWeight: FontWeight.w400,
+                    )),
+                SizedBox(height: ResponsiveSize.height(4)),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: AppColors.primaryGrey, width: 1),
                   ),
-                  SizedBox(height: ResponsiveSize.height(4)),
-                  Text(subtitle,
-                      style: AppTextStyles.size10w500Blue.copyWith(
-                        color: AppColors.black,
-                        fontWeight: FontWeight.w400,
-                      )),
-                  SizedBox(height: ResponsiveSize.height(4)),
-                  Container(
-                    width: ResponsiveSize.width(70),
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      border:
-                          Border.all(color: AppColors.primaryGrey, width: 1),
+                  child: Text(tagText,
+                      style: AppTextStyles.size10w500Blue
+                          .copyWith(color: AppColors.primaryBlue)),
+                ),
+                SizedBox(height: ResponsiveSize.height(4)),
+                Row(
+                  children: [
+                    Text(
+                      'Difficulty :',
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          color: AppColors.secondaryGrey),
                     ),
-                    child: Center(
-                      child: Text(tagText,
-                          style: AppTextStyles.size10w500Blue
-                              .copyWith(color: AppColors.primaryBlue)),
+                    Text(
+                      '$difficulty',
+                      style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          color: AppColors.primarypink),
                     ),
-                  ),
-                  SizedBox(height: ResponsiveSize.height(4)),
-                  Row(
-                    children: [
-                      Text(
-                        'Difficulty :',
-                        style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                            color: AppColors.secondaryGrey),
-                      ),
-                      Text(
-                        '$difficulty',
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                            color: AppColors.primarypink),
-                      ),
-                    ],
-                  )
-                ],
-              ),
+                  ],
+                )
+              ],
             ),
-          )
-        ],
-      ),
-    );
-  }
+          ),
+        )
+      ],
+    ),
+  );
+}
 
   @override
   void initState() {
@@ -462,7 +472,9 @@ class _MyAssessmentState extends State<MyAssessment> {
           await provider.refreshAllData();
         },
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveSize.width(8),
+              vertical: ResponsiveSize.height(16)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -470,15 +482,16 @@ class _MyAssessmentState extends State<MyAssessment> {
               if (provider.bookingMessage != null)
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: EdgeInsets.all(ResponsiveSize.width(12)),
+                  margin: EdgeInsets.only(bottom: ResponsiveSize.height(16)),
                   decoration: BoxDecoration(
                     color: provider.bookingMessage!.contains('successfully')
                         ? Colors.green[100]
                         : provider.bookingMessage!.contains('offline')
                             ? Colors.orange[100]
                             : Colors.red[100],
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius:
+                        BorderRadius.circular(ResponsiveSize.width(8)),
                     border: Border.all(
                       color: provider.bookingMessage!.contains('successfully')
                           ? Colors.green
@@ -500,9 +513,9 @@ class _MyAssessmentState extends State<MyAssessment> {
                             : provider.bookingMessage!.contains('offline')
                                 ? Colors.orange
                                 : Colors.red,
-                        size: 20,
+                        size: ResponsiveSize.width(20),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: ResponsiveSize.width(8)),
                       Expanded(
                         child: Text(
                           provider.bookingMessage!,
@@ -514,14 +527,14 @@ class _MyAssessmentState extends State<MyAssessment> {
                                     ? Colors.orange[800]
                                     : Colors.red[800],
                             fontWeight: FontWeight.w600,
-                            fontSize: 12,
+                            fontSize: ResponsiveSize.width(12),
                           ),
                         ),
                       ),
                       IconButton(
                         icon: const Icon(Icons.close),
                         onPressed: () => provider.clearBookingMessage(),
-                        iconSize: 16,
+                        iconSize: ResponsiveSize.width(16),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                       ),
@@ -530,10 +543,10 @@ class _MyAssessmentState extends State<MyAssessment> {
                 ),
 
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(ResponsiveSize.width(16)),
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(ResponsiveSize.width(12)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -544,24 +557,26 @@ class _MyAssessmentState extends State<MyAssessment> {
                         baseColor: Colors.grey.shade300,
                         highlightColor: Colors.grey.shade100,
                         child: Container(
-                          height: 280,
-                          margin: const EdgeInsets.only(right: 12),
+                          height: ResponsiveSize.height(280),
+                          margin:
+                              EdgeInsets.only(right: ResponsiveSize.width(12)),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius:
+                                BorderRadius.circular(ResponsiveSize.width(12)),
                           ),
                         ),
                       ),
                     ] else if (provider.cards.isEmpty) ...[
                       Center(
                         child: Padding(
-                          padding: const EdgeInsets.all(20),
+                          padding: EdgeInsets.all(ResponsiveSize.width(20)),
                           child: Column(
                             children: [
-                              const Text(
+                              Text(
                                 'No assessments found',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: ResponsiveSize.width(16),
                                   color: Colors.grey,
                                 ),
                               ),
@@ -667,17 +682,19 @@ class _MyAssessmentState extends State<MyAssessment> {
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xff2a70f4),
-                            minimumSize: const Size(90, 28),
+                            minimumSize: Size(ResponsiveSize.width(90),
+                                ResponsiveSize.height(28)),
                             padding: EdgeInsets.zero,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(
+                                  ResponsiveSize.width(20)),
                             ),
                           ),
-                          child: const Text(
+                          child: Text(
                             'View all',
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
-                              fontSize: 12,
+                              fontSize: ResponsiveSize.width(12),
                               color: Colors.white,
                             ),
                           ),
@@ -720,11 +737,13 @@ class _MyAssessmentState extends State<MyAssessment> {
                         baseColor: Colors.grey.shade300,
                         highlightColor: Colors.grey.shade100,
                         child: Container(
-                          width: 280,
-                          margin: const EdgeInsets.only(right: 12),
+                          width: ResponsiveSize.width(280),
+                          margin:
+                              EdgeInsets.only(right: ResponsiveSize.width(12)),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius:
+                                BorderRadius.circular(ResponsiveSize.width(12)),
                           ),
                         ),
                       );
@@ -732,20 +751,20 @@ class _MyAssessmentState extends State<MyAssessment> {
                     if (provider.workoutRoutins.isEmpty) {
                       return Center(
                         child: Padding(
-                          padding: const EdgeInsets.all(20),
+                          padding: EdgeInsets.all(ResponsiveSize.width(20)),
                           child: Column(
                             children: [
-                              const Text(
-                                'No assessments found',
+                              Text(
+                                'No workout routines found',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: ResponsiveSize.width(16),
                                   color: Colors.grey,
                                 ),
                               ),
-                              const SizedBox(height: 12),
+                              SizedBox(height: ResponsiveSize.height(12)),
                               ElevatedButton(
                                 onPressed: () {},
-                                child: const Text('Add Sample Cards'),
+                                child: const Text('Add Sample Routines'),
                               ),
                             ],
                           ),
@@ -754,7 +773,7 @@ class _MyAssessmentState extends State<MyAssessment> {
                     }
 
                     return Container(
-                      margin: const EdgeInsets.only(right: 12),
+                      margin: EdgeInsets.only(right: ResponsiveSize.width(12)),
                       child: workoutCard(
                         imageUrl: routineImags[index % routineImags.length],
                         title: provider.workoutRoutins[index].name,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_assessment_app/localStorage/app_prefrence.dart';
 import 'package:flutter_assessment_app/presentation/screens/login_page.dart';
 import 'package:flutter_assessment_app/presentation/screens/my_dashboard.dart';
+import 'package:flutter_assessment_app/utils/responsive_utils.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -22,7 +23,8 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Icon(Icons.health_and_safety, size: 100, color: Colors.blue),
+        child: Icon(Icons.health_and_safety,
+            size: ResponsiveSize.width(100), color: Colors.blue),
       ),
     );
   }

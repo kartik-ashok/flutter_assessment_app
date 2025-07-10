@@ -20,7 +20,7 @@ class HealthRiskAssessment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const topHeight = 320.0;
+    final topHeight = ResponsiveSize.height(320);
 
     return Scaffold(
       backgroundColor: AppColors.lightGreen,
@@ -31,7 +31,7 @@ class HealthRiskAssessment extends StatelessWidget {
             Container(
               height: topHeight,
               width: double.infinity,
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(ResponsiveSize.width(16)),
               color: AppColors.lightGreen,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,23 +52,24 @@ class HealthRiskAssessment extends StatelessWidget {
                             onPressed: () => Navigator.of(context).maybePop(),
                           ),
                         ),
-                        const SizedBox(height: 6),
+                        SizedBox(height: ResponsiveSize.height(6)),
                         Text(
                           (this.title),
                           style: AppTextStyles.size24w600Blue,
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: ResponsiveSize.height(8)),
                         Container(
-                          width: 65,
+                          width: ResponsiveSize.width(65),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(5),
+                            borderRadius:
+                                BorderRadius.circular(ResponsiveSize.width(5)),
                           ),
                           child: Row(
                             children: [
                               const Icon(Icons.access_time,
                                   color: Colors.black54),
-                              const SizedBox(width: 4),
+                              SizedBox(width: ResponsiveSize.width(4)),
                               Text(
                                 '4 min',
                                 style: AppTextStyles.size10w400Grey,
@@ -79,7 +80,9 @@ class HealthRiskAssessment extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 8), // spacing between image and text
+                  SizedBox(
+                      width: ResponsiveSize.width(
+                          8)), // spacing between image and text
 
                   Expanded(
                     flex: 3, // Adjust for image size
@@ -107,21 +110,28 @@ class HealthRiskAssessment extends StatelessWidget {
             // Bottom Scrollable Section
             Expanded(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                decoration: const BoxDecoration(
+                padding: EdgeInsets.symmetric(
+                    horizontal: ResponsiveSize.width(8),
+                    vertical: ResponsiveSize.height(8)),
+                decoration: BoxDecoration(
                   color: Colors.white, // Changed to red
                   borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(24)), // Curved border
+                      top: Radius.circular(
+                          ResponsiveSize.width(24))), // Curved border
                 ),
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(16, 20, 16, 40),
+                  padding: EdgeInsets.fromLTRB(
+                      ResponsiveSize.width(16),
+                      ResponsiveSize.height(20),
+                      ResponsiveSize.width(16),
+                      ResponsiveSize.height(40)),
                   physics: const BouncingScrollPhysics(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('What do you get ?',
                           style: AppTextStyles.size24w600Blue
-                              .copyWith(fontSize: 15)),
+                              .copyWith(fontSize: ResponsiveSize.width(15))),
                       SizedBox(height: ResponsiveSize.height(12)),
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -147,11 +157,12 @@ class HealthRiskAssessment extends StatelessWidget {
                       SizedBox(height: ResponsiveSize.height(12)),
                       Text('How we do it?',
                           style: AppTextStyles.size24w600Blue
-                              .copyWith(fontSize: 15)),
+                              .copyWith(fontSize: ResponsiveSize.width(15))),
                       SizedBox(height: ResponsiveSize.height(12)),
                       Center(
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius:
+                              BorderRadius.circular(ResponsiveSize.width(16)),
                           child: // Parent container (main container)
                               SizedBox(
                             height: ResponsiveSize.height(
@@ -166,7 +177,8 @@ class HealthRiskAssessment extends StatelessWidget {
                                   width: double.infinity,
                                   height: ResponsiveSize.height(180),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16),
+                                    borderRadius: BorderRadius.circular(
+                                        ResponsiveSize.width(16)),
                                     image: DecorationImage(
                                       image: AssetImage(ImagePaths.exercise),
                                       fit: BoxFit.cover,
@@ -180,7 +192,8 @@ class HealthRiskAssessment extends StatelessWidget {
                                   height: ResponsiveSize.height(180),
                                   decoration: BoxDecoration(
                                     color: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(16),
+                                    borderRadius: BorderRadius.circular(
+                                        ResponsiveSize.width(16)),
                                   ),
                                 ),
                               ],
@@ -190,10 +203,11 @@ class HealthRiskAssessment extends StatelessWidget {
                       ),
                       SizedBox(height: ResponsiveSize.height(24)),
                       Container(
-                        padding: const EdgeInsets.all(12),
+                        padding: EdgeInsets.all(ResponsiveSize.width(12)),
                         decoration: BoxDecoration(
                           color: const Color.fromARGB(255, 218, 232, 226),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius:
+                              BorderRadius.circular(ResponsiveSize.width(12)),
                         ),
                         child: Row(
                           children: [
@@ -206,8 +220,8 @@ class HealthRiskAssessment extends StatelessWidget {
                               child: Text(
                                 'We do not store or share your personal data',
                                 style: TextStyle(
-                                  fontSize: 14,
-                                  color: Color(0xFF27AE60),
+                                  fontSize: ResponsiveSize.width(14),
+                                  color: const Color(0xFF27AE60),
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -252,11 +266,12 @@ class IconLabelCard extends StatelessWidget {
           Container(
             width: ResponsiveSize.width(64),
             height: ResponsiveSize.height(64),
-            padding: const EdgeInsets.all(6),
+            padding: EdgeInsets.all(ResponsiveSize.width(6)),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.white,
-              border: Border.all(color: Colors.grey.shade300, width: 1),
+              border: Border.all(
+                  color: Colors.grey.shade300, width: ResponsiveSize.width(1)),
             ),
             child: ClipOval(
               child: Image.asset(
@@ -271,8 +286,8 @@ class IconLabelCard extends StatelessWidget {
           Text(
             label,
             textAlign: TextAlign.center,
-            style: AppTextStyles.size24w600Blue
-                .copyWith(fontSize: 8, color: AppColors.black),
+            style: AppTextStyles.size24w600Blue.copyWith(
+                fontSize: ResponsiveSize.width(8), color: AppColors.black),
           ),
         ],
       ),
@@ -294,7 +309,7 @@ class InstructionList extends StatelessWidget {
       children: List.generate(
         instructions.length,
         (index) => Padding(
-          padding: const EdgeInsets.only(bottom: 8),
+          padding: EdgeInsets.only(bottom: ResponsiveSize.height(8)),
           child: Text(
             '${index + 1}. ${instructions[index]}',
             style:

@@ -6,6 +6,7 @@ import 'package:flutter_assessment_app/domain/repository/auth_service.dart';
 import 'package:flutter_assessment_app/localStorage/app_prefrence.dart';
 import 'package:flutter_assessment_app/presentation/screens/add_data_buttons.dart';
 import 'package:flutter_assessment_app/presentation/screens/login_page.dart';
+import 'package:flutter_assessment_app/utils/responsive_utils.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -98,21 +99,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: const Text('Profile'),
         centerTitle: true,
         backgroundColor: AppColors.primaryBlue,
-        elevation: 2,
+        elevation: ResponsiveSize.width(2),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(ResponsiveSize.width(16)),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Card(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(ResponsiveSize.width(16)),
                 ),
-                elevation: 4,
+                elevation: ResponsiveSize.width(4),
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: EdgeInsets.all(ResponsiveSize.width(20)),
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -122,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           'Account Info',
                           style: AppTextStyles.size10w400Grey,
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: ResponsiveSize.height(16)),
 
                         /// Email Field
                         Text(
@@ -131,7 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             color: Colors.grey[700],
                           ),
                         ),
-                        const SizedBox(height: 6),
+                        SizedBox(height: ResponsiveSize.height(6)),
                         TextFormField(
                           controller: emailController,
                           readOnly: true,
@@ -141,12 +142,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             filled: true,
                             fillColor: Colors.grey[100],
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(
+                                  ResponsiveSize.width(10)),
                               borderSide: BorderSide.none,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 24),
+                        SizedBox(height: ResponsiveSize.height(24)),
 
                         /// Logout Button
                         SizedBox(
@@ -154,10 +156,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: ElevatedButton.icon(
                             onPressed: _logout,
                             style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: ResponsiveSize.height(14)),
                               backgroundColor: AppColors.primaryBlue,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(
+                                    ResponsiveSize.width(12)),
                               ),
                             ),
                             icon: const Icon(Icons.logout,

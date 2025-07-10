@@ -20,7 +20,7 @@ class _MyAssessmentsState extends State<MyDashboard>
   AddAssessmentCardstofirestore addAssessmentCardstofirestore =
       AddAssessmentCardstofirestore();
 
-  final double cardRadius = 12.0;
+  final double cardRadius = ResponsiveSize.width(12);
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _MyAssessmentsState extends State<MyDashboard>
       appBar: const GreetingAppBar(name: 'Jane'),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18),
+          padding: EdgeInsets.symmetric(horizontal: ResponsiveSize.width(18)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -45,10 +45,10 @@ class _MyAssessmentsState extends State<MyDashboard>
               Container(
                 decoration: BoxDecoration(
                   color: const Color(0xfff1f1f6),
-                  borderRadius: BorderRadius.circular(40),
+                  borderRadius: BorderRadius.circular(ResponsiveSize.width(40)),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(4.0),
+                  padding: EdgeInsets.all(ResponsiveSize.width(4)),
                   child: TabBar(
                     dividerColor: Colors.transparent,
 
@@ -59,25 +59,26 @@ class _MyAssessmentsState extends State<MyDashboard>
                     indicatorWeight: 0,
 
                     indicator: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
+                      borderRadius:
+                          BorderRadius.circular(ResponsiveSize.width(40)),
                       color: Colors.white,
-                      boxShadow: const [
+                      boxShadow: [
                         BoxShadow(
-                          color: Color(0xffdadada),
-                          blurRadius: 8,
-                          offset: Offset(0, 3),
+                          color: const Color(0xffdadada),
+                          blurRadius: ResponsiveSize.width(8),
+                          offset: Offset(0, ResponsiveSize.height(3)),
                         )
                       ],
                     ),
                     labelColor: const Color(0xff2a70f4),
                     unselectedLabelColor: const Color(0xffa8a8b3),
-                    labelStyle: const TextStyle(
+                    labelStyle: TextStyle(
                       fontWeight: FontWeight.w700,
-                      fontSize: 14,
+                      fontSize: ResponsiveSize.width(14),
                     ),
-                    unselectedLabelStyle: const TextStyle(
+                    unselectedLabelStyle: TextStyle(
                       fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                      fontSize: ResponsiveSize.width(14),
                     ),
                     tabs: const [
                       Tab(text: 'My Assessments'),
@@ -86,7 +87,7 @@ class _MyAssessmentsState extends State<MyDashboard>
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: ResponsiveSize.height(12)),
               Expanded(
                 child: TabBarView(
                   controller: _tabController,
