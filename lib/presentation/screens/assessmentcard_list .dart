@@ -83,7 +83,8 @@ class _AssessmentCardListState extends State<AssessmentCardList> {
                       : AppColors.greenGradientTwo,
                 ),
                 child: Hero(
-                  tag: 'assessment_image_$title', // Unique tag for each card
+                  tag:
+                      'assessment_image_${assessmentId}_$index', // Unique tag using ID and index
                   child: Image.asset(
                     assessmentCards[index % 2],
                     width: ResponsiveSize.width(99),
@@ -204,7 +205,7 @@ class _AssessmentCardListState extends State<AssessmentCardList> {
                           title: appointment.title,
                           description: appointment.description,
                           heroTag:
-                              'assessment_image_${appointment.title}', // Pass the hero tag
+                              'assessment_image_${appointment.id}_$index', // Pass the hero tag with ID and index
                         );
                       },
                       transitionDuration: const Duration(milliseconds: 600),

@@ -77,7 +77,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                       : AppColors.greenGradientTwo,
                 ),
                 child: Hero(
-                  tag: 'favorite_assessment_image_${assessment.title}',
+                  tag: 'favorite_assessment_image_${assessment.id}_$index',
                   child: Image.asset(
                     assessmentCards[index % 2],
                     width: ResponsiveSize.width(99),
@@ -98,11 +98,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(
-                    ResponsiveSize.width(14),
-                    ResponsiveSize.height(14),
-                    ResponsiveSize.width(14),
-                    ResponsiveSize.height(14)
-                  ),
+                      ResponsiveSize.width(14),
+                      ResponsiveSize.height(14),
+                      ResponsiveSize.width(14),
+                      ResponsiveSize.height(14)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -294,10 +293,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         context,
                         PageTransition(
                           child: HealthRiskAssessment(
-                            imageUrl: assessmentCards[index % assessmentCards.length],
+                            imageUrl:
+                                assessmentCards[index % assessmentCards.length],
                             title: assessment.title,
                             description: assessment.description,
-                            heroTag: 'favorite_assessment_image_${assessment.title}',
+                            heroTag:
+                                'favorite_assessment_image_${assessment.id}_$index',
                           ),
                           type: PageTransitionType.rightToLeft,
                           duration: const Duration(milliseconds: 300),

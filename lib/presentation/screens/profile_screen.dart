@@ -8,7 +8,9 @@ import 'package:flutter_assessment_app/localStorage/notification_preferences.dar
 import 'package:flutter_assessment_app/presentation/screens/add_data_buttons.dart';
 import 'package:flutter_assessment_app/presentation/screens/favorites_screen.dart';
 import 'package:flutter_assessment_app/presentation/screens/login_page.dart';
+import 'package:flutter_assessment_app/presentation/screens/notification_test_screen.dart';
 import 'package:flutter_assessment_app/utils/notification_service.dart';
+import 'package:flutter_assessment_app/utils/firebase_messaging_service.dart';
 import 'package:flutter_assessment_app/utils/responsive_utils.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -32,6 +34,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   bool _isObscure = true;
   bool _notificationsEnabled = false;
+  bool _pushNotificationsEnabled = true;
+  bool _healthRemindersEnabled = true;
+  bool _appointmentRemindersEnabled = true;
 
   Future<String?> email() async {
     return await AppPreferences.getEmail();
@@ -41,7 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _loadEmail();
-    _loadNotificationPreference();
+    _loadNotificationPreferences();
   }
 
   Future<void> _loadEmail() async {
@@ -53,10 +58,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Future<void> _loadNotificationPreference() async {
-    final enabled = await NotificationPreferences.getNotificationsEnabled();
+  Future<void> _loadNotificationPreferences() async {
+    final localEnabled =
+        await NotificationPreferences.getNotificationsEnabled();
+    final pushEnabled =
+        await NotificationPreferences.getPushNotificationsEnabled();
+    final healthEnabled =
+        await NotificationPreferences.getHealthRemindersEnabled();
+    final appointmentEnabled =
+        await NotificationPreferences.getAppointmentRemindersEnabled();
+
     setState(() {
-      _notificationsEnabled = enabled;
+      _notificationsEnabled = localEnabled;
+      _pushNotificationsEnabled = pushEnabled;
+      _healthRemindersEnabled = healthEnabled;
+      _appointmentRemindersEnabled = appointmentEnabled;
     });
   }
 
@@ -90,6 +106,77 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         );
       }
+    }
+  }
+
+  Future<void> _togglePushNotifications(bool value) async {
+    setState(() {
+      _pushNotificationsEnabled = value;
+    });
+
+    await NotificationPreferences.setPushNotificationsEnabled(value);
+
+    if (value) {
+      // Subscribe to topics when enabled
+      await FirebaseMessagingService().subscribeToTopic('health_reminders');
+      await FirebaseMessagingService()
+          .subscribeToTopic('appointment_reminders');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                'Push notifications enabled! You\'ll receive health updates.'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    } else {
+      // Unsubscribe from topics when disabled
+      await FirebaseMessagingService().unsubscribeFromTopic('health_reminders');
+      await FirebaseMessagingService()
+          .unsubscribeFromTopic('appointment_reminders');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Push notifications disabled.'),
+            backgroundColor: Colors.orange,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _toggleHealthReminders(bool value) async {
+    setState(() {
+      _healthRemindersEnabled = value;
+    });
+
+    await NotificationPreferences.setHealthRemindersEnabled(value);
+
+    if (value) {
+      await FirebaseMessagingService().subscribeToTopic('health_reminders');
+    } else {
+      await FirebaseMessagingService().unsubscribeFromTopic('health_reminders');
+    }
+  }
+
+  Future<void> _toggleAppointmentReminders(bool value) async {
+    setState(() {
+      _appointmentRemindersEnabled = value;
+    });
+
+    await NotificationPreferences.setAppointmentRemindersEnabled(value);
+
+    if (value) {
+      await FirebaseMessagingService()
+          .subscribeToTopic('appointment_reminders');
+    } else {
+      await FirebaseMessagingService()
+          .unsubscribeFromTopic('appointment_reminders');
     }
   }
 
@@ -289,6 +376,226 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     Colors.grey.withOpacity(0.3),
                               ),
                             ],
+                          ),
+                        ),
+
+                        SizedBox(height: ResponsiveSize.height(16)),
+
+                        /// Push Notifications Toggle
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(ResponsiveSize.width(16)),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius:
+                                BorderRadius.circular(ResponsiveSize.width(12)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: ResponsiveSize.width(5),
+                                offset: Offset(0, ResponsiveSize.height(2)),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.cloud_queue,
+                                color: _pushNotificationsEnabled
+                                    ? Colors.blue
+                                    : Colors.grey,
+                                size: ResponsiveSize.width(24),
+                              ),
+                              SizedBox(width: ResponsiveSize.width(12)),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Push Notifications',
+                                      style:
+                                          AppTextStyles.size14w500Blue.copyWith(
+                                        fontSize: ResponsiveSize.width(16),
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                    SizedBox(height: ResponsiveSize.height(4)),
+                                    Text(
+                                      'Receive health updates from server',
+                                      style: TextStyle(
+                                        fontSize: ResponsiveSize.width(12),
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Switch(
+                                value: _pushNotificationsEnabled,
+                                onChanged: _togglePushNotifications,
+                                activeColor: Colors.blue,
+                                activeTrackColor: Colors.blue.withOpacity(0.3),
+                                inactiveThumbColor: Colors.grey,
+                                inactiveTrackColor:
+                                    Colors.grey.withOpacity(0.3),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(height: ResponsiveSize.height(12)),
+
+                        /// Health Reminders Toggle
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(ResponsiveSize.width(16)),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius:
+                                BorderRadius.circular(ResponsiveSize.width(12)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: ResponsiveSize.width(5),
+                                offset: Offset(0, ResponsiveSize.height(2)),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.health_and_safety,
+                                color: _healthRemindersEnabled
+                                    ? Colors.green
+                                    : Colors.grey,
+                                size: ResponsiveSize.width(24),
+                              ),
+                              SizedBox(width: ResponsiveSize.width(12)),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Health Reminders',
+                                      style:
+                                          AppTextStyles.size14w500Blue.copyWith(
+                                        fontSize: ResponsiveSize.width(16),
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                    SizedBox(height: ResponsiveSize.height(4)),
+                                    Text(
+                                      'Get health tips and wellness reminders',
+                                      style: TextStyle(
+                                        fontSize: ResponsiveSize.width(12),
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Switch(
+                                value: _healthRemindersEnabled,
+                                onChanged: _toggleHealthReminders,
+                                activeColor: Colors.green,
+                                activeTrackColor: Colors.green.withOpacity(0.3),
+                                inactiveThumbColor: Colors.grey,
+                                inactiveTrackColor:
+                                    Colors.grey.withOpacity(0.3),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(height: ResponsiveSize.height(12)),
+
+                        /// Appointment Reminders Toggle
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(ResponsiveSize.width(16)),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius:
+                                BorderRadius.circular(ResponsiveSize.width(12)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: ResponsiveSize.width(5),
+                                offset: Offset(0, ResponsiveSize.height(2)),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.event_note,
+                                color: _appointmentRemindersEnabled
+                                    ? Colors.orange
+                                    : Colors.grey,
+                                size: ResponsiveSize.width(24),
+                              ),
+                              SizedBox(width: ResponsiveSize.width(12)),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Appointment Reminders',
+                                      style:
+                                          AppTextStyles.size14w500Blue.copyWith(
+                                        fontSize: ResponsiveSize.width(16),
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                    SizedBox(height: ResponsiveSize.height(4)),
+                                    Text(
+                                      'Get notified about upcoming appointments',
+                                      style: TextStyle(
+                                        fontSize: ResponsiveSize.width(12),
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Switch(
+                                value: _appointmentRemindersEnabled,
+                                onChanged: _toggleAppointmentReminders,
+                                activeColor: Colors.orange,
+                                activeTrackColor:
+                                    Colors.orange.withOpacity(0.3),
+                                inactiveThumbColor: Colors.grey,
+                                inactiveTrackColor:
+                                    Colors.grey.withOpacity(0.3),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(height: ResponsiveSize.height(16)),
+
+                        /// Test Notifications Button (Developer Option)
+                        SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton.icon(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                PageTransition(
+                                  type: PageTransitionType.rightToLeft,
+                                  child: const NotificationTestScreen(),
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.bug_report),
+                            label: const Text('Test Notifications (Dev)'),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.purple,
+                              side: const BorderSide(color: Colors.purple),
+                              padding: EdgeInsets.symmetric(
+                                vertical: ResponsiveSize.height(12),
+                              ),
+                            ),
                           ),
                         ),
 

@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_assessment_app/presentation/screens/splash_screen.dart';
 import 'package:flutter_assessment_app/provider/provider.dart';
 import 'package:flutter_assessment_app/utils/notification_service.dart';
+import 'package:flutter_assessment_app/utils/firebase_messaging_service.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'firebase_options.dart';
@@ -22,8 +23,9 @@ void main() async {
     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
   );
 
-  // ✅ Initialize notification service
+  // ✅ Initialize notification services
   await NotificationService().initialize();
+  await FirebaseMessagingService().initialize();
 
   // ✅ Run app with providers
   runApp(
