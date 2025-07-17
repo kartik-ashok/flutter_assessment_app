@@ -4,9 +4,11 @@ import 'package:flutter_assessment_app/assets/app_colors.dart';
 import 'package:flutter_assessment_app/assets/apptext_styles.dart';
 import 'package:flutter_assessment_app/domain/repository/auth_service.dart';
 import 'package:flutter_assessment_app/localStorage/app_prefrence.dart';
+import 'package:flutter_assessment_app/localStorage/notification_preferences.dart';
 import 'package:flutter_assessment_app/presentation/screens/add_data_buttons.dart';
 import 'package:flutter_assessment_app/presentation/screens/favorites_screen.dart';
 import 'package:flutter_assessment_app/presentation/screens/login_page.dart';
+import 'package:flutter_assessment_app/utils/notification_service.dart';
 import 'package:flutter_assessment_app/utils/responsive_utils.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -29,6 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       TextEditingController();
 
   bool _isObscure = true;
+  bool _notificationsEnabled = false;
 
   Future<String?> email() async {
     return await AppPreferences.getEmail();
@@ -36,9 +39,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadEmail();
+    _loadNotificationPreference();
   }
 
   Future<void> _loadEmail() async {
@@ -47,6 +50,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         emailController.text = userEmail;
       });
+    }
+  }
+
+  Future<void> _loadNotificationPreference() async {
+    final enabled = await NotificationPreferences.getNotificationsEnabled();
+    setState(() {
+      _notificationsEnabled = enabled;
+    });
+  }
+
+  Future<void> _toggleNotifications(bool value) async {
+    setState(() {
+      _notificationsEnabled = value;
+    });
+
+    await NotificationPreferences.setNotificationsEnabled(value);
+
+    if (value) {
+      await NotificationService().startRepeatingNotifications();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                'Health notifications enabled! You\'ll receive reminders every 10 seconds.'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    } else {
+      NotificationService().stopRepeatingNotifications();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Health notifications disabled.'),
+            backgroundColor: Colors.orange,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
     }
   }
 
@@ -182,6 +225,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ResponsiveSize.width(12)),
                               ),
                             ),
+                          ),
+                        ),
+
+                        SizedBox(height: ResponsiveSize.height(16)),
+
+                        /// Notification Toggle
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(ResponsiveSize.width(16)),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius:
+                                BorderRadius.circular(ResponsiveSize.width(12)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: ResponsiveSize.width(5),
+                                offset: Offset(0, ResponsiveSize.height(2)),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.notifications_active,
+                                color: _notificationsEnabled
+                                    ? Colors.green
+                                    : Colors.grey,
+                                size: ResponsiveSize.width(24),
+                              ),
+                              SizedBox(width: ResponsiveSize.width(12)),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Health Notifications',
+                                      style:
+                                          AppTextStyles.size14w500Blue.copyWith(
+                                        fontSize: ResponsiveSize.width(16),
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                    SizedBox(height: ResponsiveSize.height(4)),
+                                    Text(
+                                      'Receive health reminders every 10 seconds',
+                                      style: TextStyle(
+                                        fontSize: ResponsiveSize.width(12),
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Switch(
+                                value: _notificationsEnabled,
+                                onChanged: _toggleNotifications,
+                                activeColor: Colors.green,
+                                activeTrackColor: Colors.green.withOpacity(0.3),
+                                inactiveThumbColor: Colors.grey,
+                                inactiveTrackColor:
+                                    Colors.grey.withOpacity(0.3),
+                              ),
+                            ],
                           ),
                         ),
 
